@@ -1286,7 +1286,7 @@ const qrConfig = {
     width: 220,
     height: 220,
     type: "svg",
-    data: "https://www.qrcode-monkey.com",
+    data: "https://www.qrcodegenerator.com",
     image: "",
     margin: 10,
     qrOptions: { typeNumber: 0, mode: "Byte", errorCorrectionLevel: "Q" },
@@ -1324,7 +1324,7 @@ function updateQR(immediate = false) {
    TIPOS DE CONTENIDO
 ============================================================= */
 const tabConfigs = {
-    url: { placeholder: 'Pon tu enlace aquí', defaultValue: 'https://www.qrcode-monkey.com', inputType: 'url', help: 'Introduce una dirección web completa (incluye https://).', build: (v) => v.trim() || ' ' },
+    url: { placeholder: 'Pon tu enlace aquí', defaultValue: 'https://www.qrcodegenerator.com', inputType: 'url', help: 'Introduce una dirección web completa (incluye https://).', build: (v) => v.trim() || ' ' },
     imagen: { placeholder: 'URL de la imagen (jpg, png...)', defaultValue: 'https://picsum.photos/500', inputType: 'url', help: 'Se abrirá la imagen al escanear el QR.', build: (v) => v.trim() || ' ' },
     texto: { placeholder: 'Escribe aquí tu texto...', defaultValue: 'Hola, mundo!', inputType: 'text', help: 'Texto plano que se mostrará al escanear.', build: (v) => v || ' ' },
     pdf: { placeholder: 'URL del PDF', defaultValue: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', inputType: 'url', help: 'Se abrirá el PDF al escanear el QR.', build: (v) => v.trim() || ' ' },
