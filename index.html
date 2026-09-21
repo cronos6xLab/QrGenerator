@@ -2,16 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Qr AMG</title>
-    <!-- Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Generador de QR AMG</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- QR Code Styling Library -->
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
         body {
             background-color: #f3f4f6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         .app-container {
             max-width: 480px;
@@ -20,37 +19,63 @@
             min-height: 100vh;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             position: relative;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
         }
-        .header-green {
-            background-color: #2c7a46;
+        .header-green { background-color: #2c7a46; }
+
+        /* === TABS === */
+        .tab-btn {
+            cursor: pointer;
+            user-select: none;
+            background: transparent;
+            border: none;
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
+        .tab-btn.active {
+            color: #ffffff;
+            border-bottom: 2px solid #ffffff;
+        }
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            transition: max-height 0.35s ease-out, padding 0.3s ease;
         }
         .accordion-content.open {
-            max-height: 1500px; /* Aumentado por el nuevo contenido */
+            max-height: 2000px;
             padding-top: 1rem;
             padding-bottom: 1rem;
         }
+
         .shape-btn {
             border: 2px solid #e5e7eb;
             border-radius: 8px;
             padding: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 4px;
             cursor: pointer;
             transition: all 0.2s;
+            user-select: none;
         }
-        .shape-btn:hover { border-color: #9ca3af; }
-        .shape-btn.active { border-color: #3b82f6; background-color: #eff6ff; }
+        .shape-btn:hover { border-color: #9ca3af; background-color: #f9fafb; }
+        .shape-btn.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+        }
+        .shape-btn span { font-size: 9px; color: #6b7280; }
+        .shape-btn.active span { color: #2563eb; font-weight: 600; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Estilo para los inputs de color personalizados */
+
         .color-input-group {
             display: flex;
             align-items: center;
@@ -70,121 +95,87 @@
             background: transparent;
         }
         .color-input-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        .color-input-group input[type="color"]::-webkit-color-swatch { border: none; border-right: 1px solid #e5e7eb; }
-        .color-input-group input[type="text"] {
-            border: none;
-            outline: none;
-            padding: 0 12px;
-            width: 100%;
-            height: 100%;
-            text-transform: uppercase;
-            font-size: 15px;
-            color: #374151;
+        .color-input-group input[type="color"]::-webkit-color-swatch {
+            border: none; border-right: 1px solid #e5e7eb;
         }
-        .color-input-group .color-label {
-            padding: 0 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #6b7280;
-            white-space: nowrap;
-            border-right: 1px solid #e5e7eb;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            background-color: #f9fafb;
+        .color-input-group input[type="text"] {
+            border: none; outline: none; padding: 0 12px;
+            width: 100%; height: 100%;
+            text-transform: uppercase;
+            font-size: 15px; color: #374151;
+            font-family: monospace;
         }
 
-        /* Estilo para los radio buttons y checkboxes */
         .custom-radio, .custom-checkbox {
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             border: 2px solid #9ca3af;
             border-radius: 50%;
-            outline: none;
-            cursor: pointer;
+            outline: none; cursor: pointer;
             position: relative;
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            align-items: center; justify-content: center;
+            transition: all 0.2s; flex-shrink: 0;
         }
         .custom-checkbox { border-radius: 4px; }
         .custom-radio:checked, .custom-checkbox:checked {
-            border-color: #3b82f6;
-            background-color: #3b82f6;
+            border-color: #3b82f6; background-color: #3b82f6;
         }
         .custom-radio:checked::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background-color: white;
-            border-radius: 50%;
+            content: ''; width: 8px; height: 8px;
+            background-color: white; border-radius: 50%;
         }
         .custom-checkbox:checked::after {
-            content: '✓';
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 1;
+            content: '✓'; color: white; font-size: 14px;
+            font-weight: bold; line-height: 1;
         }
 
-        /* Estilo personalizado para el slider de margen */
         input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            background: #e5e7eb;
-            height: 6px;
-            border-radius: 4px;
-            outline: none;
+            -webkit-appearance: none; appearance: none;
+            background: #e5e7eb; height: 6px;
+            border-radius: 4px; outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #3b82f6;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
+            -webkit-appearance: none; appearance: none;
+            width: 22px; height: 22px;
+            background: #3b82f6; border-radius: 50%;
+            cursor: pointer; border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #3b82f6;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
+            width: 22px; height: 22px;
+            background: #3b82f6; border-radius: 50%;
+            cursor: pointer; border: 2px solid white;
+        }
+
+        #qr-preview-wrapper {
+            transition: max-height 0.35s ease, opacity 0.35s ease, margin 0.35s ease, padding 0.35s ease;
         }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    <!-- Contenedor Sticky unificado (Cabecera + Vista Previa) -->
     <div class="sticky top-0 z-50 bg-white shadow-md">
-        <!-- Cabecera con Pestañas -->
         <div class="header-green text-white pt-4 pb-2">
             <div class="px-4 mb-2">
-                <h1 class="text-xl font-bold tracking-wider">Generador de Qr AMG</h1>
+                <h1 class="text-xl font-bold tracking-wider">Generador de QR AMG</h1>
             </div>
-            <div class="flex overflow-x-auto no-scrollbar gap-6 px-4 pb-2 text-sm font-semibold tracking-wide">
-                <button class="tab-btn text-white border-b-2 border-white pb-1 whitespace-nowrap" data-tab="url">URL</button>
-                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="texto">TEXTO</button>
-                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="email">EMAIL</button>
-                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="telefono">TELÉFONO</button>
-                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="sms">SMS</button>
-                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="vcard">VCARD</button>
+            <div id="tabs-container" class="flex overflow-x-auto no-scrollbar gap-5 px-4 pb-2 text-sm font-semibold tracking-wide">
+                <button type="button" class="tab-btn active" data-tab="url">URL</button>
+                <button type="button" class="tab-btn text-green-200" data-tab="texto">TEXTO</button>
+                <button type="button" class="tab-btn text-green-200" data-tab="email">EMAIL</button>
+                <button type="button" class="tab-btn text-green-200" data-tab="telefono">TELÉFONO</button>
+                <button type="button" class="tab-btn text-green-200" data-tab="sms">SMS</button>
+                <button type="button" class="tab-btn text-green-200" data-tab="vcard">VCARD</button>
             </div>
         </div>
 
-        <!-- Área de Previsualización Colapsable -->
         <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col items-center justify-center">
-            <div id="qr-preview-wrapper" class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 250px; opacity: 1;">
+            <div id="qr-preview-wrapper" class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 overflow-hidden" style="max-height: 250px; opacity: 1;">
                 <div id="qr-preview"></div>
             </div>
-            <button id="toggle-preview-btn" class="text-xs text-blue-600 hover:text-blue-800 mt-2 font-semibold flex items-center gap-1">
+            <button type="button" id="toggle-preview-btn" class="text-xs text-blue-600 hover:text-blue-800 mt-2 font-semibold flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4"></path></svg>
                 Ocultar Vista Previa
             </button>
@@ -192,9 +183,9 @@
     </div>
 
     <div class="p-4 space-y-3">
-        <!-- Acordeón 1: Introducir Contenido -->
+        <!-- Acordeón 1 -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-1">
+            <button type="button" class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-1">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
@@ -205,13 +196,14 @@
             </button>
             <div id="content-1" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
                 <label class="block text-sm font-semibold text-gray-600 mb-1" id="input-label">Tu URL</label>
-                <input type="text" id="qr-data" value="https://www.qrcode-monkey.com" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="https://ejemplo.com">
+                <input type="url" id="qr-data" value="https://www.qrcode-monkey.com" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="https://ejemplo.com">
+                <p id="input-help" class="text-xs text-gray-400 mt-1"></p>
             </div>
         </div>
 
-        <!-- Acordeón 2: Escoge Colores -->
+        <!-- Acordeón 2: Colores -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-2">
+            <button type="button" class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-2">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded bg-blue-100 flex items-center justify-center text-blue-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
@@ -222,8 +214,6 @@
             </button>
             <div id="content-2" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
                 <div class="space-y-5">
-                    
-                    <!-- Color de Frente -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-600 mb-3">Color de Frente</label>
                         <div class="flex flex-wrap gap-4 items-center mb-3 text-sm text-gray-600">
@@ -236,7 +226,6 @@
                                 Color Desvanecido
                             </label>
                         </div>
-                        
                         <div class="space-y-3">
                             <div class="color-input-group">
                                 <input type="color" id="color-front-1" value="#000000">
@@ -249,10 +238,8 @@
                         </div>
                     </div>
 
-                    <!-- Personalización de Ojos (Marcos y Centros) -->
                     <div class="pt-4 border-t border-gray-200">
                         <label class="block text-sm font-semibold text-gray-600 mb-3">Ojos (Esquinas)</label>
-                        
                         <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
                             <input type="checkbox" id="custom-eye-frame-check" class="custom-checkbox">
                             Personalizar Marco
@@ -261,7 +248,6 @@
                             <input type="color" id="color-eye-frame" value="#ff0000">
                             <input type="text" id="hex-eye-frame" value="#FF0000" maxlength="7">
                         </div>
-
                         <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
                             <input type="checkbox" id="custom-eye-dot-check" class="custom-checkbox">
                             Personalizar Centro
@@ -272,7 +258,6 @@
                         </div>
                     </div>
 
-                    <!-- Color de Fondo -->
                     <div class="pt-4 border-t border-gray-200">
                         <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
                             <input type="checkbox" id="transparent-bg-check" class="custom-checkbox">
@@ -280,7 +265,7 @@
                         </label>
                         <div id="bg-color-wrapper">
                             <label class="block text-sm font-semibold text-gray-600 mb-2">Color de fondo</label>
-                            <div class="color-input-group" id="bg-color-group">
+                            <div class="color-input-group">
                                 <input type="color" id="color-bg" value="#ffffff">
                                 <input type="text" id="hex-bg" value="#FFFFFF" maxlength="7">
                             </div>
@@ -290,9 +275,9 @@
             </div>
         </div>
 
-        <!-- Acordeón 3: Añadir Imagen del Logo -->
+        <!-- Acordeón 3: Logo -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-3">
+            <button type="button" class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-3">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -308,18 +293,18 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <input type="file" id="logo-upload" accept="image/*" class="hidden">
-                        <button onclick="document.getElementById('logo-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition shadow-sm">
+                        <button type="button" id="upload-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition shadow-sm">
                             Usar Imagen
                         </button>
-                        <button id="remove-logo" class="text-xs text-red-500 hover:text-red-700 block underline hidden">Eliminar Logo</button>
+                        <button type="button" id="remove-logo" class="text-xs text-red-500 hover:text-red-700 underline hidden">Eliminar Logo</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Acordeón 4: Personalizar Diseño (NUEVAS OPCIONES AÑADIDAS) -->
+        <!-- Acordeón 4: Diseño -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-4">
+            <button type="button" class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-4">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
@@ -329,8 +314,6 @@
                 <svg class="w-5 h-5 text-gray-400 transform transition-transform accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             </button>
             <div id="content-4" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
-                
-                <!-- Nivel de Corrección -->
                 <label class="block text-sm font-semibold text-gray-600 mb-2">Nivel de Corrección de Errores</label>
                 <select id="error-correction" class="w-full p-2 mb-4 border border-gray-300 rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="L">Bajo (7%) - Recomendado sin logo</option>
@@ -339,308 +322,430 @@
                     <option value="H">Máximo (30%)</option>
                 </select>
 
-                <!-- Margen -->
                 <label class="block text-sm font-semibold text-gray-600 mb-2">Margen (Zona de seguridad)</label>
                 <div class="flex items-center gap-3 mb-4">
                     <input type="range" id="qr-margin" min="0" max="40" value="10" class="w-full">
                     <span id="margin-value" class="text-sm font-bold w-8 text-right text-gray-700">10</span>
                 </div>
 
-                <!-- Formas -->
                 <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del cuerpo</label>
-                <div class="grid grid-cols-4 gap-2 mb-4">
-                    <div class="shape-btn active" data-type="dots" data-value="square"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg></div>
-                    <div class="shape-btn" data-type="dots" data-value="dots"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
-                    <div class="shape-btn" data-type="dots" data-value="rounded"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg></div>
-                    <div class="shape-btn" data-type="dots" data-value="classy"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></div>
+                <div class="grid grid-cols-4 gap-2 mb-4" id="body-shapes">
+                    <div class="shape-btn active" data-type="dotsOptions" data-value="square">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>
+                        <span>Cuadrado</span>
+                    </div>
+                    <div class="shape-btn" data-type="dotsOptions" data-value="dots">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                        <span>Puntos</span>
+                    </div>
+                    <div class="shape-btn" data-type="dotsOptions" data-value="rounded">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
+                        <span>Redondo</span>
+                    </div>
+                    <div class="shape-btn" data-type="dotsOptions" data-value="classy-rounded">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h8v3H7v5H4zM12 4h8v8h-3V7h-5zM4 12h3v5h5v3H4zM17 12h3v8h-8v-3h5z"/></svg>
+                        <span>Elegante</span>
+                    </div>
                 </div>
 
                 <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del marco del ojo</label>
                 <div class="grid grid-cols-4 gap-2 mb-4">
-                    <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square"><div class="w-6 h-6 border-4 border-black"></div></div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded"><div class="w-6 h-6 border-4 border-black rounded-lg"></div></div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot"><div class="w-6 h-6 border-4 border-black rounded-full"></div></div>
+                    <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square">
+                        <div class="w-6 h-6 border-4 border-black"></div>
+                        <span>Cuadrado</span>
+                    </div>
+                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
+                        <div class="w-6 h-6 border-4 border-black rounded-lg"></div>
+                        <span>Redondeado</span>
+                    </div>
+                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot">
+                        <div class="w-6 h-6 border-4 border-black rounded-full"></div>
+                        <span>Círculo</span>
+                    </div>
                 </div>
 
-                <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del ojo</label>
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del ojo (centro)</label>
                 <div class="grid grid-cols-4 gap-2 mb-4">
-                    <div class="shape-btn active" data-type="cornersDotOptions" data-value="square"><div class="w-4 h-4 bg-black"></div></div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="dot"><div class="w-4 h-4 bg-black rounded-full"></div></div>
+                    <div class="shape-btn active" data-type="cornersDotOptions" data-value="square">
+                        <div class="w-4 h-4 bg-black"></div>
+                        <span>Cuadrado</span>
+                    </div>
+                    <div class="shape-btn" data-type="cornersDotOptions" data-value="dot">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                        <span>Círculo</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Botones de Descarga -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-[480px] mx-auto z-50 flex gap-2">
-        <button id="download-png" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded shadow-md transition">Descarga PNG</button>
-        <button id="download-svg" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded shadow-sm border border-blue-200 transition">Descarga SVG</button>
+        <button type="button" id="download-png" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded shadow-md transition">Descarga PNG</button>
+        <button type="button" id="download-svg" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded shadow-sm border border-blue-200 transition">Descarga SVG</button>
     </div>
-
 </div>
 
 <script>
-    // Configuración inicial del QR (Reducida a 200px para que estorbe menos)
-    let qrConfig = {
-        width: 200,
-        height: 200,
-        type: "svg",
-        data: "https://www.qrcode-monkey.com",
-        image: "",
-        margin: 10,
-        qrOptions: { typeNumber: 0, mode: "Byte", errorCorrectionLevel: "Q" },
-        imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 5, crossOrigin: "anonymous" },
-        dotsOptions: { color: "#000000", type: "square" },
-        backgroundOptions: { color: "#ffffff" },
-        cornersSquareOptions: { color: "#000000", type: "square" },
-        cornersDotOptions: { color: "#000000", type: "square" }
-    };
+/* =============================================================
+   CONFIGURACIÓN INICIAL DEL QR
+============================================================= */
+const qrConfig = {
+    width: 220,
+    height: 220,
+    type: "svg",
+    data: "https://www.qrcode-monkey.com",
+    image: "",
+    margin: 10,
+    qrOptions: { typeNumber: 0, mode: "Byte", errorCorrectionLevel: "Q" },
+    imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 5, crossOrigin: "anonymous" },
+    dotsOptions: { color: "#000000", type: "square" },
+    backgroundOptions: { color: "#ffffff" },
+    cornersSquareOptions: { color: "#000000", type: "square" },
+    cornersDotOptions: { color: "#000000", type: "square" }
+};
 
-    const qrCode = new QRCodeStyling(qrConfig);
-    const previewContainer = document.getElementById('qr-preview');
-    qrCode.append(previewContainer);
+const qrCode = new QRCodeStyling(qrConfig);
+const previewContainer = document.getElementById('qr-preview');
+qrCode.append(previewContainer);
 
-    function updateQR() { qrCode.update(qrConfig); }
+let updateTimer = null;
+function updateQR(immediate = false) {
+    if (updateTimer) clearTimeout(updateTimer);
+    if (immediate) { qrCode.update(qrConfig); return; }
+    updateTimer = setTimeout(() => qrCode.update(qrConfig), 60);
+}
 
-    // --- Lógica de Acordeones ---
-    document.querySelectorAll('.accordion-header').forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.getAttribute('data-target');
-            const content = document.getElementById(targetId);
-            const icon = button.querySelector('.accordion-icon');
-            
-            document.querySelectorAll('.accordion-content').forEach(el => {
-                if (el.id !== targetId) {
-                    el.classList.remove('open');
-                    el.previousElementSibling.querySelector('.accordion-icon').style.transform = 'rotate(0deg)';
-                }
-            });
-
-            content.classList.toggle('open');
-            icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        });
-    });
-
-    // --- Lógica Ocultar/Mostrar Vista Previa ---
-    const togglePreviewBtn = document.getElementById('toggle-preview-btn');
-    const previewWrapper = document.getElementById('qr-preview-wrapper');
-    let isPreviewVisible = true;
-
-    togglePreviewBtn.addEventListener('click', () => {
-        isPreviewVisible = !isPreviewVisible;
-        if (isPreviewVisible) {
-            previewWrapper.style.maxHeight = '250px';
-            previewWrapper.style.opacity = '1';
-            previewWrapper.style.marginTop = '0';
-            togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4"></path></svg> Ocultar Vista Previa`;
-        } else {
-            previewWrapper.style.maxHeight = '0';
-            previewWrapper.style.opacity = '0';
-            previewWrapper.style.marginTop = '-1rem';
-            togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h12m0 0l-4-4m4 4l-4 4"></path></svg> Mostrar Vista Previa`;
+/* =============================================================
+   TABS (URL, TEXTO, EMAIL, TELÉFONO, SMS, VCARD)
+============================================================= */
+const tabConfigs = {
+    url: {
+        label: 'Tu URL',
+        placeholder: 'https://ejemplo.com',
+        defaultValue: 'https://www.qrcode-monkey.com',
+        inputType: 'url',
+        help: 'Introduce una dirección web completa (incluye https://).',
+        build: (v) => v.trim() || ' '
+    },
+    texto: {
+        label: 'Tu Texto',
+        placeholder: 'Escribe aquí tu texto...',
+        defaultValue: 'Hola, mundo!',
+        inputType: 'text',
+        help: 'Texto plano que se mostrará al escanear el QR.',
+        build: (v) => v || ' '
+    },
+    email: {
+        label: 'Correo Electrónico',
+        placeholder: 'correo@ejemplo.com',
+        defaultValue: 'contacto@amg.com',
+        inputType: 'email',
+        help: 'Al escanear se abrirá el cliente de correo.',
+        build: (v) => { const c = v.trim(); return c ? `mailto:${c}` : ' '; }
+    },
+    telefono: {
+        label: 'Número de Teléfono',
+        placeholder: '+52 123 456 7890',
+        defaultValue: '+52 555 123 4567',
+        inputType: 'tel',
+        help: 'Al escanear se iniciará una llamada al número.',
+        build: (v) => { const c = v.replace(/[^\d+]/g, ''); return c ? `tel:${c}` : ' '; }
+    },
+    sms: {
+        label: 'Número para SMS',
+        placeholder: '+52 123 456 7890',
+        defaultValue: '+52 555 123 4567',
+        inputType: 'tel',
+        help: 'Al escanear se abrirá la app de mensajes.',
+        build: (v) => { const c = v.replace(/[^\d+]/g, ''); return c ? `sms:${c}` : ' '; }
+    },
+    vcard: {
+        label: 'Nombre, Teléfono, Email (separados por coma)',
+        placeholder: 'Juan Pérez, +521234567890, juan@email.com',
+        defaultValue: 'Juan Pérez, +521234567890, juan@email.com',
+        inputType: 'text',
+        help: 'Se generará una tarjeta de contacto (vCard).',
+        build: (v) => {
+            if (!v.trim()) return ' ';
+            const [nombre = '', tel = '', email = ''] = v.split(',').map(s => s.trim());
+            return `BEGIN:VCARD\nVERSION:3.0\nN:${nombre}\nFN:${nombre}\nTEL:${tel}\nEMAIL:${email}\nEND:VCARD`;
         }
+    }
+};
+
+let currentTab = 'url';
+const tabs = document.querySelectorAll('.tab-btn');
+const inputLabel = document.getElementById('input-label');
+const inputHelp = document.getElementById('input-help');
+const qrDataInput = document.getElementById('qr-data');
+
+function buildQRData() {
+    const cfg = tabConfigs[currentTab];
+    return cfg.build(qrDataInput.value);
+}
+
+function setActiveTab(tabKey) {
+    if (!tabConfigs[tabKey]) return;
+    currentTab = tabKey;
+    const cfg = tabConfigs[tabKey];
+
+    tabs.forEach(t => {
+        const isActive = t.dataset.tab === tabKey;
+        t.classList.toggle('active', isActive);
+        t.classList.toggle('text-green-200', !isActive);
     });
 
-    // --- Lógica de Entrada de Datos ---
-    document.getElementById('qr-data').addEventListener('input', (e) => {
-        qrConfig.data = e.target.value || " ";
-        updateQR();
+    inputLabel.textContent = cfg.label;
+    inputHelp.textContent = cfg.help || '';
+    qrDataInput.type = cfg.inputType;
+    qrDataInput.placeholder = cfg.placeholder;
+    qrDataInput.value = cfg.defaultValue;
+
+    qrConfig.data = buildQRData();
+    updateQR(true);
+}
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setActiveTab(tab.dataset.tab);
     });
+});
 
-    // --- Lógica de Colores y Gama Cromática ---
-    const colorTypeRadios = document.querySelectorAll('input[name="color-type"]');
-    const customEyeFrameCheck = document.getElementById('custom-eye-frame-check');
-    const customEyeDotCheck = document.getElementById('custom-eye-dot-check');
-    const transparentBgCheck = document.getElementById('transparent-bg-check');
-    
-    const gradientContainer = document.getElementById('gradient-color-container');
-    const eyeFrameColorContainer = document.getElementById('eye-frame-color-container');
-    const eyeDotColorContainer = document.getElementById('eye-dot-color-container');
-    const bgColorWrapper = document.getElementById('bg-color-wrapper');
-    
-    // Inputs de frente
-    const colorFront1 = document.getElementById('color-front-1');
-    const hexFront1 = document.getElementById('hex-front-1');
-    const colorFront2 = document.getElementById('color-front-2');
-    const hexFront2 = document.getElementById('hex-front-2');
-    
-    // Inputs de ojo
-    const colorEyeFrame = document.getElementById('color-eye-frame');
-    const hexEyeFrame = document.getElementById('hex-eye-frame');
-    const colorEyeDot = document.getElementById('color-eye-dot');
-    const hexEyeDot = document.getElementById('hex-eye-dot');
+qrDataInput.addEventListener('input', () => {
+    qrConfig.data = buildQRData();
+    updateQR();
+});
 
-    // Inputs de fondo
-    const colorBg = document.getElementById('color-bg');
-    const hexBg = document.getElementById('hex-bg');
+/* =============================================================
+   ACORDEONES
+============================================================= */
+document.querySelectorAll('.accordion-header').forEach(button => {
+    button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        const icon = button.querySelector('.accordion-icon');
 
-    // Función para sincronizar Color Picker y Texto Hex
-    function syncColorInputs(colorInput, textInput, callback) {
-        colorInput.addEventListener('input', (e) => {
-            textInput.value = e.target.value.toUpperCase();
-            callback();
+        document.querySelectorAll('.accordion-content').forEach(el => {
+            if (el.id !== targetId) {
+                el.classList.remove('open');
+                const prevIcon = el.previousElementSibling.querySelector('.accordion-icon');
+                if (prevIcon) prevIcon.style.transform = 'rotate(0deg)';
+            }
         });
-        textInput.addEventListener('input', (e) => {
-            let val = e.target.value;
-            if(val.startsWith('#') && (val.length === 4 || val.length === 7)) {
+
+        const isOpen = content.classList.toggle('open');
+        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+});
+
+/* =============================================================
+   VISTA PREVIA COLAPSABLE
+============================================================= */
+const togglePreviewBtn = document.getElementById('toggle-preview-btn');
+const previewWrapper = document.getElementById('qr-preview-wrapper');
+let isPreviewVisible = true;
+
+togglePreviewBtn.addEventListener('click', () => {
+    isPreviewVisible = !isPreviewVisible;
+    if (isPreviewVisible) {
+        previewWrapper.style.maxHeight = '250px';
+        previewWrapper.style.opacity = '1';
+        previewWrapper.style.marginTop = '0';
+        togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4"></path></svg> Ocultar Vista Previa`;
+    } else {
+        previewWrapper.style.maxHeight = '0';
+        previewWrapper.style.opacity = '0';
+        previewWrapper.style.marginTop = '-1rem';
+        togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h12m0 0l-4-4m4 4l-4 4"></path></svg> Mostrar Vista Previa`;
+    }
+});
+
+/* =============================================================
+   COLORES
+============================================================= */
+const colorTypeRadios = document.querySelectorAll('input[name="color-type"]');
+const customEyeFrameCheck = document.getElementById('custom-eye-frame-check');
+const customEyeDotCheck = document.getElementById('custom-eye-dot-check');
+const transparentBgCheck = document.getElementById('transparent-bg-check');
+
+const gradientContainer = document.getElementById('gradient-color-container');
+const eyeFrameColorContainer = document.getElementById('eye-frame-color-container');
+const eyeDotColorContainer = document.getElementById('eye-dot-color-container');
+const bgColorWrapper = document.getElementById('bg-color-wrapper');
+
+const colorFront1 = document.getElementById('color-front-1');
+const hexFront1 = document.getElementById('hex-front-1');
+const colorFront2 = document.getElementById('color-front-2');
+const hexFront2 = document.getElementById('hex-front-2');
+const colorEyeFrame = document.getElementById('color-eye-frame');
+const hexEyeFrame = document.getElementById('hex-eye-frame');
+const colorEyeDot = document.getElementById('color-eye-dot');
+const hexEyeDot = document.getElementById('hex-eye-dot');
+const colorBg = document.getElementById('color-bg');
+const hexBg = document.getElementById('hex-bg');
+
+function syncColorInputs(colorInput, textInput, callback) {
+    colorInput.addEventListener('input', (e) => {
+        textInput.value = e.target.value.toUpperCase();
+        callback();
+    });
+    textInput.addEventListener('input', (e) => {
+        let val = e.target.value.trim();
+        if (!val.startsWith('#')) val = '#' + val;
+        if (val.length === 4 || val.length === 7) {
+            const test = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i;
+            if (test.test(val)) {
                 colorInput.value = val;
                 callback();
             }
-        });
+        }
+    });
+    textInput.addEventListener('blur', () => {
+        textInput.value = colorInput.value.toUpperCase();
+    });
+}
+
+function applyColors() {
+    const isGradient = document.querySelector('input[name="color-type"]:checked').value === 'gradient';
+    const hasCustomEyeFrame = customEyeFrameCheck.checked;
+    const hasCustomEyeDot = customEyeDotCheck.checked;
+    const isTransparent = transparentBgCheck.checked;
+
+    const color1 = colorFront1.value;
+    const color2 = colorFront2.value;
+
+    qrConfig.backgroundOptions.color = isTransparent ? "rgba(0,0,0,0)" : colorBg.value;
+
+    if (isGradient) {
+        qrConfig.dotsOptions.color = color1;
+        qrConfig.dotsOptions.gradient = {
+            type: 'linear',
+            rotation: Math.PI / 4,
+            colorStops: [
+                { offset: 0, color: color1 },
+                { offset: 1, color: color2 }
+            ]
+        };
+    } else {
+        qrConfig.dotsOptions.gradient = undefined;
+        qrConfig.dotsOptions.color = color1;
     }
 
-    // Función principal para aplicar los colores al QR
-    function applyColors() {
-        const isGradient = document.querySelector('input[name="color-type"]:checked').value === 'gradient';
-        const hasCustomEyeFrame = customEyeFrameCheck.checked;
-        const hasCustomEyeDot = customEyeDotCheck.checked;
-        const isTransparent = transparentBgCheck.checked;
-        
-        const color1 = colorFront1.value;
-        const color2 = colorFront2.value;
-        const bgColor = colorBg.value;
-        const eyeFrameColorVal = colorEyeFrame.value;
-        const eyeDotColorVal = colorEyeDot.value;
+    qrConfig.cornersSquareOptions.color = hasCustomEyeFrame ? colorEyeFrame.value : color1;
+    qrConfig.cornersDotOptions.color = hasCustomEyeDot ? colorEyeDot.value : color1;
 
-        // Configurar Fondo
-        if (isTransparent) {
-            qrConfig.backgroundOptions.color = "rgba(0,0,0,0)";
-        } else {
-            qrConfig.backgroundOptions.color = bgColor;
-        }
+    updateQR();
+}
 
-        // Configurar Frente (Sólido o Degradado)
-        if (isGradient) {
-            qrConfig.dotsOptions.color = color1; // Fallback
-            qrConfig.dotsOptions.gradient = {
-                type: 'linear',
-                rotation: Math.PI / 4,
-                colorStops: [
-                    { offset: 0, color: color1 },
-                    { offset: 1, color: color2 }
-                ]
-            };
-        } else {
-            delete qrConfig.dotsOptions.gradient;
-            qrConfig.dotsOptions.color = color1;
-        }
+syncColorInputs(colorFront1, hexFront1, applyColors);
+syncColorInputs(colorFront2, hexFront2, applyColors);
+syncColorInputs(colorEyeFrame, hexEyeFrame, applyColors);
+syncColorInputs(colorEyeDot, hexEyeDot, applyColors);
+syncColorInputs(colorBg, hexBg, applyColors);
 
-        // Configurar Marco del Ojo
-        if (hasCustomEyeFrame) {
-            qrConfig.cornersSquareOptions.color = eyeFrameColorVal;
-        } else {
-            qrConfig.cornersSquareOptions.color = color1;
-        }
-
-        // Configurar Centro del Ojo
-        if (hasCustomEyeDot) {
-            qrConfig.cornersDotOptions.color = eyeDotColorVal;
-        } else {
-            qrConfig.cornersDotOptions.color = color1;
-        }
-
-        updateQR();
-    }
-
-    // Sincronizar todos los inputs
-    syncColorInputs(colorFront1, hexFront1, applyColors);
-    syncColorInputs(colorFront2, hexFront2, applyColors);
-    syncColorInputs(colorEyeFrame, hexEyeFrame, applyColors);
-    syncColorInputs(colorEyeDot, hexEyeDot, applyColors);
-    syncColorInputs(colorBg, hexBg, applyColors);
-
-    // Eventos de Radio Buttons (Sólido / Degradado)
-    colorTypeRadios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            if (radio.value === 'gradient') {
-                gradientContainer.classList.remove('hidden');
-            } else {
-                gradientContainer.classList.add('hidden');
-            }
-            applyColors();
-        });
-    });
-
-    // Eventos Checkbox Ojos
-    customEyeFrameCheck.addEventListener('change', (e) => {
-        e.target.checked ? eyeFrameColorContainer.classList.remove('hidden') : eyeFrameColorContainer.classList.add('hidden');
+colorTypeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        gradientContainer.classList.toggle('hidden', radio.value !== 'gradient');
         applyColors();
     });
+});
 
-    customEyeDotCheck.addEventListener('change', (e) => {
-        e.target.checked ? eyeDotColorContainer.classList.remove('hidden') : eyeDotColorContainer.classList.add('hidden');
-        applyColors();
-    });
+customEyeFrameCheck.addEventListener('change', (e) => {
+    eyeFrameColorContainer.classList.toggle('hidden', !e.target.checked);
+    applyColors();
+});
+customEyeDotCheck.addEventListener('change', (e) => {
+    eyeDotColorContainer.classList.toggle('hidden', !e.target.checked);
+    applyColors();
+});
+transparentBgCheck.addEventListener('change', (e) => {
+    bgColorWrapper.style.opacity = e.target.checked ? '0.5' : '1';
+    bgColorWrapper.style.pointerEvents = e.target.checked ? 'none' : 'auto';
+    applyColors();
+});
 
-    transparentBgCheck.addEventListener('change', (e) => {
-        bgColorWrapper.style.opacity = e.target.checked ? '0.5' : '1';
-        bgColorWrapper.style.pointerEvents = e.target.checked ? 'none' : 'auto';
-        applyColors();
-    });
+/* =============================================================
+   LOGO
+============================================================= */
+const logoUpload = document.getElementById('logo-upload');
+const logoPreview = document.getElementById('logo-preview');
+const removeLogoBtn = document.getElementById('remove-logo');
+const uploadBtn = document.getElementById('upload-btn');
 
-    // --- Lógica de Logo ---
-    const logoUpload = document.getElementById('logo-upload');
-    const logoPreview = document.getElementById('logo-preview');
-    const removeLogoBtn = document.getElementById('remove-logo');
+uploadBtn.addEventListener('click', () => logoUpload.click());
 
-    logoUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                qrConfig.image = event.target.result;
-                logoPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-contain rounded">`;
-                removeLogoBtn.classList.remove('hidden');
-                updateQR();
-            };
-            reader.readAsDataURL(file);
+logoUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        qrConfig.image = event.target.result;
+        logoPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-contain rounded">`;
+        removeLogoBtn.classList.remove('hidden');
+        updateQR(true);
+    };
+    reader.readAsDataURL(file);
+});
+
+removeLogoBtn.addEventListener('click', () => {
+    qrConfig.image = "";
+    logoPreview.innerHTML = "SIN LOGO";
+    logoUpload.value = "";
+    removeLogoBtn.classList.add('hidden');
+    updateQR(true);
+});
+
+/* =============================================================
+   FORMAS
+============================================================= */
+document.querySelectorAll('.shape-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const type = btn.getAttribute('data-type');
+        const value = btn.getAttribute('data-value');
+
+        const group = btn.parentElement;
+        group.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (!qrConfig[type]) {
+            console.warn(`qrConfig["${type}"] no existe. Revisa data-type.`);
+            return;
         }
+        qrConfig[type].type = value;
+        updateQR(true);
     });
+});
 
-    removeLogoBtn.addEventListener('click', () => {
-        qrConfig.image = "";
-        logoPreview.innerHTML = "SIN LOGO";
-        logoUpload.value = "";
-        removeLogoBtn.classList.add('hidden');
-        updateQR();
-    });
+/* =============================================================
+   MARGEN Y CORRECCIÓN
+============================================================= */
+const marginSlider = document.getElementById('qr-margin');
+const marginValue = document.getElementById('margin-value');
+marginSlider.addEventListener('input', (e) => {
+    qrConfig.margin = parseInt(e.target.value, 10);
+    marginValue.textContent = e.target.value;
+    updateQR();
+});
 
-    // --- Lógica de Formas y Diseño ---
-    document.querySelectorAll('.shape-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const type = btn.getAttribute('data-type');
-            const value = btn.getAttribute('data-value');
-            
-            btn.parentElement.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+const errorCorrectionSelect = document.getElementById('error-correction');
+errorCorrectionSelect.addEventListener('change', (e) => {
+    qrConfig.qrOptions.errorCorrectionLevel = e.target.value;
+    updateQR(true);
+});
 
-            qrConfig[type].type = value;
-            updateQR();
-        });
-    });
+/* =============================================================
+   DESCARGAS
+============================================================= */
+document.getElementById('download-png').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "png" }));
+document.getElementById('download-svg').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "svg" }));
 
-    // Lógica Margen
-    const marginSlider = document.getElementById('qr-margin');
-    const marginValue = document.getElementById('margin-value');
-    marginSlider.addEventListener('input', (e) => {
-        qrConfig.margin = parseInt(e.target.value);
-        marginValue.textContent = e.target.value;
-        updateQR();
-    });
-
-    // Lógica Corrección de Errores
-    const errorCorrectionSelect = document.getElementById('error-correction');
-    errorCorrectionSelect.addEventListener('change', (e) => {
-        qrConfig.qrOptions.errorCorrectionLevel = e.target.value;
-        updateQR();
-    });
-
-    // --- Descargas ---
-    document.getElementById('download-png').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "png" }));
-    document.getElementById('download-svg').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "svg" }));
-
-    // Iniciar con el primer acordeón abierto
-    document.querySelector('.accordion-header[data-target="content-1"]').click();
+/* =============================================================
+   INICIALIZACIÓN
+============================================================= */
+document.querySelector('.accordion-header[data-target="content-1"]').click();
+setActiveTab('url');
 </script>
 </body>
 </html>
