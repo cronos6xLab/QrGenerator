@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Qr AMG</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- QR Code Styling Library -->
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <style>
+        /* Estilos personalizados para simular la app móvil */
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 80px;
+        }
+        .header-green {
+            background-color: #2c7a46; /* Color verde de la cabecera de la imagen */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        .accordion-content.open {
+            max-height: 1000px; /* Ajustar según el contenido */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .shape-btn {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .shape-btn:hover {
+            border-color: #9ca3af;
+        }
+        .shape-btn.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        /* Scrollbar oculto para pestañas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+    <!-- Cabecera con Pestañas -->
+    <div class="header-green text-white pt-4 pb-2 sticky top-0 z-50 shadow-md">
+        <div class="px-4 mb-2">
+            <h1 class="text-xl font-bold tracking-wider">Generador de Qr AMG</h1>
+        </div>
+        <div class="flex overflow-x-auto no-scrollbar gap-6 px-4 pb-2 text-sm font-semibold tracking-wide">
+            <button class="tab-btn text-white border-b-2 border-white pb-1" data-tab="url">URL</button>
+            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="texto">TEXTO</button>
+            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="email">EMAIL</button>
+            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="telefono">TELÉFONO</button>
+            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="sms">SMS</button>
+            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="vcard">VCARD</button>
+        </div>
+    </div>
+
+    <!-- Área de Previsualización (Sticky) -->
+    <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col items-center justify-center sticky top-[76px] z-40 shadow-sm">
+        <div id="qr-preview" class="bg-white p-2 rounded-xl shadow-sm border border-gray-100"></div>
+        <p class="text-xs text-gray-400 mt-2">Vista previa en tiempo real</p>
+    </div>
+
+    <div class="p-4 space-y-3">
+        <!-- Acordeón 1: Introducir Contenido -->
+        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-1">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    </div>
+                    <span class="font-medium text-gray-700 uppercase">Introduce Contenido</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </button>
+            <div id="content-1" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
+                <label class="block text-sm font-semibold text-gray-600 mb-1" id="input-label">Tu URL</label>
+                <input type="text" id="qr-data" value="https://www.qrcode-monkey.com" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="https://ejemplo.com">
+            </div>
+        </div>
+
+        <!-- Acordeón 2: Escoge Colores -->
+        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-blue-100 flex items-center justify-center text-blue-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                    </div>
+                    <span class="font-medium text-gray-700 uppercase">Escoge Colores</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </button>
+            <div id="content-2" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Color de Frente</label>
+                        <div class="flex gap-4 items-center">
+                            <input type="color" id="color-dots" value="#000000" class="w-10 h-10 rounded cursor-pointer border border-gray-300">
+                            <span class="text-sm text-gray-500">Color sólido</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Color de Fondo</label>
+                        <div class="flex gap-4 items-center">
+                            <input type="color" id="color-bg" value="#ffffff" class="w-10 h-10 rounded cursor-pointer border border-gray-300">
+                            <span class="text-sm text-gray-500">Color sólido</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acordeón 3: Añadir Imagen del Logo -->
+        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <span class="font-medium text-gray-700 uppercase">Añadir Imagen del Logo</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </button>
+            <div id="content-3" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-24 h-24 bg-white border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-xs text-gray-400" id="logo-preview">
+                        SIN LOGO
+                    </div>
+                    <div>
+                        <input type="file" id="logo-upload" accept="image/*" class="hidden">
+                        <button onclick="document.getElementById('logo-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition shadow-sm">
+                            Usa Imagen
+                        </button>
+                        <button id="remove-logo" class="mt-2 text-xs text-red-500 hover:text-red-700 block underline hidden">Eliminar Logo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acordeón 4: Personalizar Diseño -->
+        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </div>
+                    <span class="font-medium text-gray-700 uppercase">Personalizar Diseño</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 transform transition-transform accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </button>
+            <div id="content-4" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
+                
+                <!-- Forma del cuerpo -->
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del cuerpo</label>
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <div class="shape-btn active" data-type="dots" data-value="square">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>
+                    </div>
+                    <div class="shape-btn" data-type="dots" data-value="dots">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                    </div>
+                    <div class="shape-btn" data-type="dots" data-value="rounded">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
+                    </div>
+                    <div class="shape-btn" data-type="dots" data-value="classy">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Forma del ojo (Marco) -->
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del marco del ojo</label>
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square">
+                        <div class="w-6 h-6 border-4 border-black"></div>
+                    </div>
+                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
+                        <div class="w-6 h-6 border-4 border-black rounded-lg"></div>
+                    </div>
+                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot">
+                        <div class="w-6 h-6 border-4 border-black rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Forma del ojo (Centro) -->
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del ojo</label>
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <div class="shape-btn active" data-type="cornersDotOptions" data-value="square">
+                        <div class="w-4 h-4 bg-black"></div>
+                    </div>
+                    <div class="shape-btn" data-type="cornersDotOptions" data-value="dot">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección de Plantillas / Temas (Como en las capturas 5 y 6) -->
+        <div class="mt-6 mb-2">
+            <h3 class="text-sm font-bold text-gray-500 uppercase mb-3 px-1">Estilos Populares</h3>
+            <div class="grid grid-cols-2 gap-3" id="themes-container">
+                <!-- Los temas se generarán con JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Botones de Descarga (Fijos en la parte inferior) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-[480px] mx-auto z-50 flex gap-2">
+        <button id="download-png" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded shadow-md transition">
+            Descarga PNG
+        </button>
+        <button id="download-svg" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded shadow-sm border border-blue-200 transition">
+            Descarga SVG
+        </button>
+    </div>
+
+</div>
+
+<script>
+    // Configuración inicial del QR
+    let qrConfig = {
+        width: 250,
+        height: 250,
+        type: "svg",
+        data: "https://www.qrcode-monkey.com",
+        image: "",
+        margin: 10,
+        qrOptions: {
+            typeNumber: 0,
+            mode: "Byte",
+            errorCorrectionLevel: "Q"
+        },
+        imageOptions: {
+            hideBackgroundDots: true,
+            imageSize: 0.4,
+            margin: 5,
+            crossOrigin: "anonymous",
+        },
+        dotsOptions: {
+            color: "#000000",
+            type: "square" // square, dots, rounded, classy, classy-rounded, extra-rounded
+        },
+        backgroundOptions: {
+            color: "#ffffff",
+        },
+        cornersSquareOptions: {
+            color: "#000000",
+            type: "square" // square, dot, extra-rounded
+        },
+        cornersDotOptions: {
+            color: "#000000",
+            type: "square" // square, dot
+        }
+    };
+
+    // Inicializar instancia de QR
+    const qrCode = new QRCodeStyling(qrConfig);
+    const previewContainer = document.getElementById('qr-preview');
+    qrCode.append(previewContainer);
+
+    // Función para actualizar el QR
+    function updateQR() {
+        qrCode.update(qrConfig);
+    }
+
+    // --- Lógica de Acordeones ---
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const content = document.getElementById(targetId);
+            const icon = button.querySelector('.accordion-icon');
+            
+            // Cerrar otros
+            document.querySelectorAll('.accordion-content').forEach(el => {
+                if (el.id !== targetId) {
+                    el.classList.remove('open');
+                    el.previousElementSibling.querySelector('.accordion-icon').style.transform = 'rotate(0deg)';
+                }
+            });
+
+            // Alternar actual
+            content.classList.toggle('open');
+            if (content.classList.contains('open')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+
+    // --- Lógica de Pestañas (Tabs) ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const inputLabel = document.getElementById('input-label');
+    const qrDataInput = document.getElementById('qr-data');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Estilos de pestaña activa
+            tabBtns.forEach(b => {
+                b.classList.remove('text-white', 'border-b-2', 'border-white', 'pb-1');
+                b.classList.add('text-green-200');
+            });
+            btn.classList.remove('text-green-200');
+            btn.classList.add('text-white', 'border-b-2', 'border-white', 'pb-1');
+
+            // Cambiar el input según la pestaña (simplificado para la demo)
+            const tab = btn.getAttribute('data-tab');
+            if(tab === 'url') { inputLabel.innerText = 'Tu URL'; qrDataInput.placeholder = 'https://ejemplo.com'; }
+            else if(tab === 'texto') { inputLabel.innerText = 'Tu Texto'; qrDataInput.placeholder = 'Escribe un mensaje...'; }
+            else if(tab === 'email') { inputLabel.innerText = 'Correo Electrónico'; qrDataInput.placeholder = 'correo@ejemplo.com'; }
+            else if(tab === 'telefono') { inputLabel.innerText = 'Número de Teléfono'; qrDataInput.placeholder = '+1234567890'; }
+            else if(tab === 'sms') { inputLabel.innerText = 'Mensaje SMS'; qrDataInput.placeholder = 'Texto del SMS...'; }
+            else if(tab === 'vcard') { inputLabel.innerText = 'Datos de Contacto'; qrDataInput.placeholder = 'Nombre, Teléfono, Email...'; }
+        });
+    });
+
+    // --- Lógica de Entrada de Datos ---
+    qrDataInput.addEventListener('input', (e) => {
+        qrConfig.data = e.target.value || " "; // Evitar vacío absoluto que rompe el QR
+        updateQR();
+    });
+
+    // --- Lógica de Colores ---
+    document.getElementById('color-dots').addEventListener('input', (e) => {
+        qrConfig.dotsOptions.color = e.target.value;
+        qrConfig.cornersSquareOptions.color = e.target.value;
+        qrConfig.cornersDotOptions.color = e.target.value;
+        updateQR();
+    });
+
+    document.getElementById('color-bg').addEventListener('input', (e) => {
+        qrConfig.backgroundOptions.color = e.target.value;
+        updateQR();
+    });
+
+    // --- Lógica de Logo ---
+    const logoUpload = document.getElementById('logo-upload');
+    const logoPreview = document.getElementById('logo-preview');
+    const removeLogoBtn = document.getElementById('remove-logo');
+
+    logoUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                qrConfig.image = event.target.result;
+                logoPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-contain rounded">`;
+                removeLogoBtn.classList.remove('hidden');
+                updateQR();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    removeLogoBtn.addEventListener('click', () => {
+        qrConfig.image = "";
+        logoPreview.innerHTML = "SIN LOGO";
+        logoUpload.value = "";
+        removeLogoBtn.classList.add('hidden');
+        updateQR();
+    });
+
+    // --- Lógica de Personalización de Formas ---
+    document.querySelectorAll('.shape-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.getAttribute('data-type');
+            const value = btn.getAttribute('data-value');
+            
+            // UI activa
+            btn.parentElement.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Actualizar configuración
+            qrConfig[type].type = value;
+            updateQR();
+        });
+    });
+
+    // --- Lógica de Descargas ---
+    document.getElementById('download-png').addEventListener('click', () => {
+        qrCode.download({ name: "qr-amg", extension: "png" });
+    });
+    
+    document.getElementById('download-svg').addEventListener('click', () => {
+        qrCode.download({ name: "qr-amg", extension: "svg" });
+    });
+
+    // --- Lógica de Plantillas / Temas (Generación dinámica) ---
+    const themes = [
+        { name: "Classic", dots: "#000000", bg: "#ffffff", dotType: "square", cornerType: "square", logo: "" },
+        { name: "Easy", dots: "#94a3b8", bg: "#ffffff", dotType: "rounded", cornerType: "extra-rounded", logo: "" },
+        { name: "Facebook", dots: "#3b5998", bg: "#ffffff", dotType: "square", cornerType: "square", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" },
+        { name: "Twitter", dots: "#1DA1F2", bg: "#ffffff", dotType: "dots", cornerType: "dot", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg" },
+        { name: "Youtube", dots: "#FF0000", bg: "#ffffff", dotType: "dots", cornerType: "dot", logo: "https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" },
+        { name: "Jungle", dots: "#2e7d32", bg: "#e8f5e9", dotType: "classy", cornerType: "extra-rounded", logo: "" },
+        { name: "Mosaic", dots: "#8b5cf6", bg: "#f3e8ff", dotType: "rounded", cornerType: "square", logo: "" },
+        { name: "Coffee", dots: "#795548", bg: "#efebe9", dotType: "classy", cornerType: "square", logo: "" }
+    ];
+
+    const themesContainer = document.getElementById('themes-container');
+
+    themes.forEach((theme, index) => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-lg shadow-sm border border-gray-200 p-2 cursor-pointer hover:shadow-md transition flex flex-col items-center";
+        
+        // Crear un mini QR para la previsualización del tema
+        const miniQrDiv = document.createElement('div');
+        miniQrDiv.id = `mini-qr-${index}`;
+        miniQrDiv.className = "w-20 h-20 mb-2 pointer-events-none";
+        
+        const label = document.createElement('span');
+        label.className = "text-xs font-semibold text-gray-600";
+        label.innerText = theme.name;
+
+        card.appendChild(miniQrDiv);
+        card.appendChild(label);
+        themesContainer.appendChild(card);
+
+        // Generar mini QR
+        const miniQrConfig = {
+            width: 80,
+            height: 80,
+            data: "https://www.qrcode-monkey.com",
+            image: theme.logo,
+            dotsOptions: { color: theme.dots, type: theme.dotType },
+            backgroundOptions: { color: theme.bg },
+            cornersSquareOptions: { color: theme.dots, type: theme.cornerType },
+            cornersDotOptions: { color: theme.dots, type: theme.cornerType === 'dot' ? 'dot' : 'square' },
+            imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 2 }
+        };
+        const miniQr = new QRCodeStyling(miniQrConfig);
+        miniQr.append(miniQrDiv);
+
+        // Evento click para aplicar el tema
+        card.addEventListener('click', () => {
+            // Actualizar config principal
+            qrConfig.dotsOptions.color = theme.dots;
+            qrConfig.dotsOptions.type = theme.dotType;
+            qrConfig.backgroundOptions.color = theme.bg;
+            qrConfig.cornersSquareOptions.color = theme.dots;
+            qrConfig.cornersSquareOptions.type = theme.cornerType;
+            qrConfig.cornersDotOptions.color = theme.dots;
+            qrConfig.cornersDotOptions.type = theme.cornerType === 'dot' ? 'dot' : 'square';
+            qrConfig.image = theme.logo;
+
+            // Actualizar UI (Colores)
+            document.getElementById('color-dots').value = theme.dots;
+            document.getElementById('color-bg').value = theme.bg;
+
+            // Actualizar UI (Logo)
+            if(theme.logo) {
+                logoPreview.innerHTML = `<img src="${theme.logo}" class="w-full h-full object-contain rounded">`;
+                removeLogoBtn.classList.remove('hidden');
+            } else {
+                logoPreview.innerHTML = "SIN LOGO";
+                removeLogoBtn.classList.add('hidden');
+            }
+
+            // Forzar la actualización de botones de forma en el acordeón
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-value') === theme.dotType || btn.getAttribute('data-value') === theme.cornerType) {
+                    btn.classList.add('active');
+                }
+            });
+
+            updateQR();
+        });
+    });
+
+    // Iniciar con el primer acordeón abierto
+    document.querySelector('.accordion-header[data-target="content-1"]').click();
+
+</script>
+</body>
+</html>
