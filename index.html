@@ -31,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* === HEADER === */
         .app-header {
             display: flex;
             align-items: center;
@@ -396,7 +395,6 @@
         .btn-purple:hover { background: var(--purple-dark); }
         .btn-purple:active { transform: scale(0.97); }
 
-        /* === BARRA DE DESCARGA === */
         .download-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -524,7 +522,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* === VISTA PREVIA FLOTANTE === */
         #floating-qr {
             position: fixed;
             bottom: 160px;
@@ -616,9 +613,6 @@
         }
         #floating-qr.user-moved .drag-hint { display: none; }
 
-        /* ============================================================
-           MODAL DE HISTORIAL
-        ============================================================ */
         #history-modal {
             position: fixed;
             inset: 0;
@@ -820,11 +814,6 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .history-item-date {
-            font-size: 10px;
-            color: #9ca3af;
-            margin: 0;
-        }
 
         .history-item-actions {
             display: flex;
@@ -867,7 +856,6 @@
         .history-action-del:hover { background: #fee2e2; }
         .history-action-btn svg { width: 12px; height: 12px; }
 
-        /* Aviso de tamaño */
         .history-info-bar {
             padding: 8px 20px;
             background: #faf5ff;
@@ -884,7 +872,6 @@
 
 <div class="app-container">
 
-    <!-- HEADER CON BOTÓN DE HISTORIAL -->
     <div class="app-header">
         <h1 class="app-title">
             Generador QR AMG
@@ -973,7 +960,7 @@
         </div>
 
         <div id="panel-content" class="fade-in">
-            <input type="url" id="qr-data" class="big-input" value="https://www.qrcodegenerator.com" placeholder="Pon tu enlace aquí">
+            <input type="url" id="qr-data" class="big-input" value="https://www.qrcode-monkey.com" placeholder="Pon tu enlace aquí">
             <p class="input-help" id="input-help">Introduce una dirección web completa (incluye https://).</p>
         </div>
 
@@ -1229,7 +1216,6 @@
 
 </div>
 
-<!-- VISTA PREVIA FLOTANTE -->
 <div id="floating-qr" class="hidden">
     <button type="button" class="close-btn" id="floating-close" title="Ocultar">×</button>
     <div class="drag-handle" id="floating-handle" title="Arrastra para mover">
@@ -1239,7 +1225,6 @@
     <div class="drag-hint">✦ Arrástrame ✦</div>
 </div>
 
-<!-- MODAL DE HISTORIAL -->
 <div id="history-modal" class="hidden">
     <div class="history-backdrop" id="history-backdrop"></div>
     <div class="history-panel">
@@ -1286,7 +1271,7 @@ const qrConfig = {
     width: 220,
     height: 220,
     type: "svg",
-    data: "https://www.qrcodegenerator.com",
+    data: "https://www.qrcode-monkey.com",
     image: "",
     margin: 10,
     qrOptions: { typeNumber: 0, mode: "Byte", errorCorrectionLevel: "Q" },
@@ -1324,7 +1309,7 @@ function updateQR(immediate = false) {
    TIPOS DE CONTENIDO
 ============================================================= */
 const tabConfigs = {
-    url: { placeholder: 'Pon tu enlace aquí', defaultValue: 'https://www.qrcodegenerator.com', inputType: 'url', help: 'Introduce una dirección web completa (incluye https://).', build: (v) => v.trim() || ' ' },
+    url: { placeholder: 'Pon tu enlace aquí', defaultValue: 'https://www.qrcode-monkey.com', inputType: 'url', help: 'Introduce una dirección web completa (incluye https://).', build: (v) => v.trim() || ' ' },
     imagen: { placeholder: 'URL de la imagen (jpg, png...)', defaultValue: 'https://picsum.photos/500', inputType: 'url', help: 'Se abrirá la imagen al escanear el QR.', build: (v) => v.trim() || ' ' },
     texto: { placeholder: 'Escribe aquí tu texto...', defaultValue: 'Hola, mundo!', inputType: 'text', help: 'Texto plano que se mostrará al escanear.', build: (v) => v || ' ' },
     pdf: { placeholder: 'URL del PDF', defaultValue: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', inputType: 'url', help: 'Se abrirá el PDF al escanear el QR.', build: (v) => v.trim() || ' ' },
@@ -1627,7 +1612,7 @@ filenameReset.addEventListener('click', () => {
 ============================================================= */
 const HISTORY_KEY = 'qrAMG_history';
 const HISTORY_MAX_ITEMS = 40;
-const HISTORY_MAX_SIZE = 2_500_000; // ~2.5MB
+const HISTORY_MAX_SIZE = 2_500_000;
 
 function getHistory() {
     try {
@@ -1636,7 +1621,6 @@ function getHistory() {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
-        console.warn('Error al leer historial:', e);
         return [];
     }
 }
@@ -1646,32 +1630,43 @@ function saveHistory(history) {
         localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
         return true;
     } catch (e) {
-        // Si excede la cuota, eliminar items hasta que quepa
-        console.warn('Historial excede la cuota, recortando...');
         while (history.length > 1) {
             history.pop();
             try {
                 localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
                 return true;
-            } catch (_) { /* seguir recortando */ }
+            } catch (_) {}
         }
         return false;
     }
 }
 
-async function saveToHistory(name) {
+function getCurrentSVGString() {
+    const svg = document.querySelector('#qr-preview svg');
+    if (!svg) return null;
+    const clone = svg.cloneNode(true);
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    if (!clone.getAttribute('viewBox')) {
+        clone.setAttribute('viewBox', `0 0 ${qrConfig.width} ${qrConfig.height}`);
+    }
+    return clone.outerHTML;
+}
+
+function saveToHistory(name) {
     try {
-        // Obtener el SVG en texto plano
-        const svgBlob = await qrCode.getRawData('svg');
-        if (!svgBlob) return;
-        const svgText = await svgBlob.text();
+        const svgText = getCurrentSVGString();
+        if (!svgText) {
+            console.warn('No se pudo capturar el SVG actual');
+            return;
+        }
 
         const item = {
             id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
             name: name,
             date: Date.now(),
             svg: svgText,
-            // Guardamos el config para poder restaurar el diseño más tarde
             config: JSON.parse(JSON.stringify(qrConfig)),
             tab: currentTab
         };
@@ -1679,12 +1674,10 @@ async function saveToHistory(name) {
         const history = getHistory();
         history.unshift(item);
 
-        // Limitar por cantidad
         if (history.length > HISTORY_MAX_ITEMS) {
             history.length = HISTORY_MAX_ITEMS;
         }
 
-        // Limitar por tamaño
         let size = JSON.stringify(history).length;
         while (size > HISTORY_MAX_SIZE && history.length > 1) {
             history.pop();
@@ -1695,7 +1688,7 @@ async function saveToHistory(name) {
         updateHistoryBadge(true);
         renderHistory();
     } catch (e) {
-        console.warn('No se pudo guardar en historial:', e);
+        console.warn('Error guardando en historial:', e);
     }
 }
 
@@ -1721,7 +1714,7 @@ function formatDate(timestamp) {
     const diffH = Math.floor(diffMs / 3600000);
     const diffD = Math.floor(diffMs / 86400000);
 
-    if (diffMin < 1) return 'Hace unos segundos';
+    if (diffMin < 1) return 'Ahora';
     if (diffMin < 60) return `Hace ${diffMin} min`;
     if (diffH < 24) return `Hace ${diffH}h`;
     if (diffD < 7) return `Hace ${diffD}d`;
@@ -1746,6 +1739,7 @@ function renderHistory() {
     const infoBar = document.getElementById('history-info-bar');
     const clearBtn = document.getElementById('history-clear-all');
 
+    if (!grid) return;
     grid.innerHTML = '';
 
     if (history.length === 0) {
@@ -1765,11 +1759,9 @@ function renderHistory() {
         el.className = 'history-item';
         el.dataset.id = item.id;
 
-        // Contenido: SVG embebido
         const previewDiv = document.createElement('div');
         previewDiv.className = 'history-item-preview';
         previewDiv.innerHTML = item.svg;
-        // Reemplazar width/height en el SVG para que sea responsive
         const svgEl = previewDiv.querySelector('svg');
         if (svgEl) {
             svgEl.removeAttribute('width');
@@ -1779,7 +1771,6 @@ function renderHistory() {
             svgEl.style.maxWidth = '100%';
             svgEl.style.maxHeight = '100%';
         }
-        // Badge con la fecha relativa
         const badge = document.createElement('span');
         badge.className = 'history-item-badge';
         badge.textContent = formatDate(item.date);
@@ -1787,9 +1778,7 @@ function renderHistory() {
 
         const infoDiv = document.createElement('div');
         infoDiv.className = 'history-item-info';
-        infoDiv.innerHTML = `
-            <p class="history-item-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</p>
-        `;
+        infoDiv.innerHTML = `<p class="history-item-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</p>`;
 
         const actions = document.createElement('div');
         actions.className = 'history-item-actions';
@@ -1812,11 +1801,7 @@ function renderHistory() {
         el.appendChild(actions);
         grid.appendChild(el);
 
-        // Eventos
-        previewDiv.addEventListener('click', () => {
-            // Cargar configuración de nuevo en el editor
-            restoreFromHistory(item);
-        });
+        previewDiv.addEventListener('click', () => { restoreFromHistory(item); });
         actions.querySelector('[data-action="png"]').addEventListener('click', (e) => {
             e.stopPropagation();
             downloadFromHistory(item, 'png');
@@ -1833,51 +1818,60 @@ function renderHistory() {
         });
     });
 
-    // Barra informativa
     const totalSize = JSON.stringify(history).length;
     const sizeKB = (totalSize / 1024).toFixed(1);
     infoBar.textContent = `${history.length} ${history.length === 1 ? 'QR guardado' : 'QRs guardados'} · ${sizeKB} KB usados`;
     infoBar.style.display = 'block';
 }
 
-async function downloadFromHistory(item, extension) {
-    // Regenerar el QR con el config guardado y descargar
-    const tempQR = new QRCodeStyling({
-        ...item.config,
-        width: 220,
-        height: 220,
-        type: extension === 'svg' ? 'svg' : 'canvas'
-    });
-    tempQR.download({ name: item.name, extension });
+function downloadFromHistory(item, extension) {
+    try {
+        const temp = document.createElement('div');
+        temp.style.cssText = 'position:fixed;left:-9999px;top:-9999px;pointer-events:none;';
+        document.body.appendChild(temp);
+
+        const tempQR = new QRCodeStyling({
+            ...item.config,
+            width: 400,
+            height: 400,
+            type: extension === 'svg' ? 'svg' : 'canvas'
+        });
+        tempQR.append(temp);
+
+        setTimeout(() => {
+            try {
+                tempQR.download({ name: item.name, extension });
+            } catch (err) {
+                console.warn('Error al descargar desde historial:', err);
+                alert('No se pudo descargar. Intenta de nuevo.');
+            }
+            setTimeout(() => {
+                if (temp.parentNode) temp.parentNode.removeChild(temp);
+            }, 1500);
+        }, 120);
+    } catch (e) {
+        console.error(e);
+        alert('Error al generar la descarga');
+    }
 }
 
 function restoreFromHistory(item) {
-    // Restaurar tab
     if (item.tab && tabConfigs[item.tab]) {
         setActiveTab(item.tab);
-        // Si el tab tiene data en config, la restauramos
         if (item.config.data) {
             qrDataInput.value = item.config.data;
             qrConfig.data = item.config.data;
         }
     }
-
-    // Restaurar config completa
     Object.assign(qrConfig, JSON.parse(JSON.stringify(item.config)));
-
-    // Refrescar UI
     refreshUIFromConfig();
-
     updateQR(true);
     closeHistoryModal();
-
-    // Cambiar a pestaña Personalizar
     const customizeTab = document.querySelector('.step-tab[data-step="customize"]');
     if (customizeTab) customizeTab.click();
 }
 
 function refreshUIFromConfig() {
-    // Colores de frente
     if (qrConfig.dotsOptions.gradient) {
         document.querySelector('input[name="color-type"][value="gradient"]').checked = true;
         gradientContainer.classList.remove('hidden');
@@ -1890,7 +1884,6 @@ function refreshUIFromConfig() {
     colorFront1.value = qrConfig.dotsOptions.color;
     hexFront1.value = qrConfig.dotsOptions.color.toUpperCase();
 
-    // Fondo
     const bg = qrConfig.backgroundOptions.color;
     if (bg === 'rgba(0,0,0,0)' || bg === 'transparent') {
         transparentBgCheck.checked = true;
@@ -1904,7 +1897,6 @@ function refreshUIFromConfig() {
         hexBg.value = bg.toUpperCase();
     }
 
-    // Ojos (marcos personalizados)
     if (qrConfig.cornersSquareOptions.color !== qrConfig.dotsOptions.color) {
         customEyeFrameCheck.checked = true;
         eyeFrameColorContainer.classList.remove('hidden');
@@ -1924,7 +1916,6 @@ function refreshUIFromConfig() {
         eyeDotColorContainer.classList.add('hidden');
     }
 
-    // Logo
     if (qrConfig.image) {
         logoPreview.innerHTML = `<img src="${qrConfig.image}" style="width:100%;height:100%;object-fit:contain;">`;
         removeLogoBtn.classList.remove('hidden');
@@ -1933,14 +1924,10 @@ function refreshUIFromConfig() {
         removeLogoBtn.classList.add('hidden');
     }
 
-    // Margen
     marginSlider.value = qrConfig.margin;
     marginValue.textContent = qrConfig.margin;
-
-    // Corrección
     errorCorrectionSelect.value = qrConfig.qrOptions.errorCorrectionLevel;
 
-    // Formas (buscar los botones activos)
     document.querySelectorAll('.shape-btn').forEach(btn => {
         const type = btn.dataset.type;
         const value = btn.dataset.value;
@@ -1954,6 +1941,7 @@ function refreshUIFromConfig() {
 function updateHistoryBadge(animate = false) {
     const count = getHistory().length;
     const badge = document.getElementById('history-count');
+    if (!badge) return;
     badge.textContent = count;
     badge.style.display = count > 0 ? 'flex' : 'none';
     if (animate) {
@@ -1995,20 +1983,26 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* =============================================================
-   DESCARGA CON GUARDADO EN HISTORIAL
+   DESCARGA — SIN ASYNC/AWAIT para preservar el user gesture
 ============================================================= */
-async function handleDownload(extension) {
+function handleDownload(extension) {
     const name = getFinalFilename();
-    qrCode.download({ name, extension });
 
-    // Guardar en historial
-    await saveToHistory(name);
-
-    // Incrementar secuencia si NO se usó nombre personalizado
-    if (!filenameInput.value.trim()) {
-        incrementSequence();
-        setTimeout(updateFilenameHint, 100);
+    try {
+        qrCode.download({ name, extension });
+    } catch (err) {
+        console.error('Error en download:', err);
+        alert('No se pudo descargar. Intenta de nuevo.');
+        return;
     }
+
+    setTimeout(() => {
+        saveToHistory(name);
+        if (!filenameInput.value.trim()) {
+            incrementSequence();
+            updateFilenameHint();
+        }
+    }, 150);
 }
 
 document.getElementById('download-png').addEventListener('click', () => handleDownload('png'));
@@ -2045,7 +2039,6 @@ stepTabs.forEach(tab => {
     tab.addEventListener('click', () => { userDismissedFloating = false; });
 });
 
-/* ARRASTRAR VISTA PREVIA */
 const dragHandle = document.getElementById('floating-handle');
 let isDragging = false;
 let dragStartPointerX = 0, dragStartPointerY = 0;
