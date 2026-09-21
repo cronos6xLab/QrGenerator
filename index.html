@@ -31,7 +31,7 @@
             min-height: 100vh;
         }
 
-        /* ==== PILLS HORIZONTALES (tipos de contenido) ==== */
+        /* ==== PILLS HORIZONTALES ==== */
         .pills-bar {
             display: flex;
             gap: 8px;
@@ -71,7 +71,6 @@
             background: var(--purple-light);
             color: var(--purple);
         }
-        .pill.active svg { color: var(--purple); }
 
         /* ==== TARJETA PRINCIPAL ==== */
         .main-card {
@@ -82,7 +81,7 @@
             margin-bottom: 16px;
         }
 
-        /* ==== STEP TABS (Contenido / Personalizar) ==== */
+        /* ==== STEP TABS ==== */
         .step-tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -124,7 +123,7 @@
         }
         .step-tab.active .step-num { background: var(--purple); }
 
-        /* ==== INPUT PRINCIPAL ==== */
+        /* ==== INPUT ==== */
         .big-input {
             width: 100%;
             padding: 20px 18px;
@@ -165,7 +164,7 @@
             display: inline-block;
         }
 
-        /* ==== SECCIONES DE PERSONALIZACIÓN ==== */
+        /* ==== SECCIONES ==== */
         .custom-section {
             padding: 16px 0;
             border-bottom: 1px solid #f3f4f6;
@@ -228,8 +227,7 @@
 
         /* ==== RADIO / CHECKBOX ==== */
         .custom-radio, .custom-checkbox {
-            appearance: none;
-            -webkit-appearance: none;
+            appearance: none; -webkit-appearance: none;
             width: 20px; height: 20px;
             border: 2px solid #d1d5db;
             border-radius: 50%;
@@ -242,8 +240,7 @@
         }
         .custom-checkbox { border-radius: 6px; }
         .custom-radio:checked, .custom-checkbox:checked {
-            border-color: var(--purple);
-            background-color: var(--purple);
+            border-color: var(--purple); background-color: var(--purple);
         }
         .custom-radio:checked::after {
             content: ''; width: 8px; height: 8px;
@@ -277,18 +274,13 @@
             background-color: var(--purple-lighter);
             color: var(--purple);
         }
-        .shape-btn span {
-            font-size: 10px;
-            color: #6b7280;
-            font-weight: 500;
-        }
+        .shape-btn span { font-size: 10px; color: #6b7280; font-weight: 500; }
         .shape-btn.active span { color: var(--purple); font-weight: 700; }
 
         /* ==== RANGE ==== */
         input[type="range"] {
             -webkit-appearance: none; appearance: none;
-            width: 100%;
-            background: #e5e7eb; height: 6px;
+            width: 100%; background: #e5e7eb; height: 6px;
             border-radius: 4px; outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
@@ -307,18 +299,12 @@
 
         /* ==== SELECT ==== */
         .pretty-select {
-            width: 100%;
-            padding: 12px 14px;
+            width: 100%; padding: 12px 14px;
             border: 1.5px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 14px;
-            background: #fff;
-            color: #374151;
-            outline: none;
-            font-family: inherit;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
+            border-radius: 12px; font-size: 14px;
+            background: #fff; color: #374151; outline: none;
+            font-family: inherit; cursor: pointer;
+            appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
             background-repeat: no-repeat;
             background-position: right 12px center;
@@ -329,112 +315,190 @@
 
         /* ==== LOGO ==== */
         .logo-preview {
-            width: 96px;
-            height: 96px;
+            width: 96px; height: 96px;
             background: #fafafa;
             border: 2px dashed #e5e7eb;
             border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: #9ca3af;
-            overflow: hidden;
-            text-align: center;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: #9ca3af;
+            overflow: hidden; text-align: center; flex-shrink: 0;
         }
         .btn-purple {
-            background: var(--purple);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
+            background: var(--purple); color: white;
+            padding: 12px 20px; border-radius: 12px;
+            font-size: 14px; font-weight: 700;
+            border: none; cursor: pointer;
+            transition: all 0.2s; font-family: inherit;
         }
         .btn-purple:hover { background: var(--purple-dark); }
         .btn-purple:active { transform: scale(0.97); }
 
-        /* ==== BOTONES DESCARGA ==== */
+        /* ==== BARRA DESCARGA ==== */
         .download-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            max-width: 480px;
-            margin: 0 auto;
+            max-width: 480px; margin: 0 auto;
             padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 0px));
-            display: flex;
-            gap: 10px;
-            z-index: 50;
+            display: flex; gap: 10px; z-index: 50;
             background: linear-gradient(to top, rgba(243,232,255,0.95) 30%, rgba(243,232,255,0));
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
         .btn-download {
-            flex: 1;
-            padding: 15px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
+            flex: 1; padding: 15px; border-radius: 14px;
+            font-weight: 700; font-size: 14px;
+            border: none; cursor: pointer;
+            transition: all 0.2s; font-family: inherit;
         }
         .btn-download:active { transform: scale(0.97); }
         .btn-primary {
-            background: var(--purple);
-            color: white;
+            background: var(--purple); color: white;
             box-shadow: 0 4px 14px rgba(147, 51, 234, 0.35);
         }
         .btn-primary:hover { background: var(--purple-dark); }
         .btn-secondary {
-            background: white;
-            color: var(--purple);
+            background: white; color: var(--purple);
             border: 1.5px solid var(--purple-light);
         }
         .btn-secondary:hover { background: var(--purple-lighter); }
 
-        /* ==== Radio inline labels ==== */
         .radio-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #4b5563;
-            user-select: none;
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; font-size: 14px;
+            color: #4b5563; user-select: none;
         }
         .check-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #4b5563;
-            user-select: none;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; font-size: 14px;
+            color: #4b5563; user-select: none;
             padding: 4px 0;
         }
         .check-label strong { font-weight: 600; color: #374151; }
 
         .hidden { display: none !important; }
 
-        .fade-in {
-            animation: fadeIn 0.25s ease-in-out;
-        }
+        .fade-in { animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* =========================================================
+           VISTA PREVIA FLOTANTE (DRAGGABLE)
+        ========================================================= */
+        #floating-qr {
+            position: fixed;
+            bottom: 105px;
+            right: 14px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow:
+                0 12px 40px rgba(147, 51, 234, 0.30),
+                0 0 0 1.5px rgba(147, 51, 234, 0.12);
+            z-index: 55;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+            animation: floatIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, left, top;
+        }
+        #floating-qr:active { cursor: grabbing; }
+        #floating-qr.dragging {
+            box-shadow:
+                0 22px 60px rgba(147, 51, 234, 0.45),
+                0 0 0 2px rgba(147, 51, 234, 0.35);
+            transform: scale(1.06);
+            transition: none;
+        }
+        #floating-qr .drag-handle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 0 8px;
+            cursor: grab;
+        }
+        #floating-qr .drag-handle span {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: #c4b5fd;
+            transition: background 0.2s;
+        }
+        #floating-qr:active .drag-handle span { background: var(--purple); }
+
+        #floating-qr-code {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        #floating-qr .close-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: white;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
+            padding: 0;
+            line-height: 1;
+            font-family: inherit;
+        }
+        #floating-qr .close-btn:active { transform: scale(0.9); }
+
+        @keyframes floatIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.85); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Hint cuando el usuario aún no ha arrastrado */
+        #floating-qr .drag-hint {
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(147, 51, 234, 0.9);
+            color: white;
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            animation: hintFade 3s ease-out 0.6s forwards;
+            font-weight: 600;
+        }
+        @keyframes hintFade {
+            0% { opacity: 0; transform: translate(-50%, 4px); }
+            15% { opacity: 1; transform: translate(-50%, 0); }
+            85% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -4px); }
+        }
+        #floating-qr.user-moved .drag-hint { display: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
 
-    <!-- ==== PILLS HORIZONTALES ==== -->
+    <!-- ==== PILLS ==== -->
     <div class="pills-bar" id="pills-bar">
         <button type="button" class="pill active" data-tab="url">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -493,12 +557,10 @@
     <!-- ==== TARJETA PRINCIPAL ==== -->
     <div class="main-card">
 
-        <!-- Preview QR -->
-        <div class="qr-preview-wrap">
+        <div class="qr-preview-wrap" id="main-preview-wrap">
             <div id="qr-preview"></div>
         </div>
 
-        <!-- Step tabs -->
         <div class="step-tabs">
             <button type="button" class="step-tab active" data-step="content">
                 <span class="step-num">1</span>
@@ -510,16 +572,15 @@
             </button>
         </div>
 
-        <!-- ==== PANEL: CONTENIDO ==== -->
+        <!-- PANEL CONTENIDO -->
         <div id="panel-content" class="fade-in">
             <input type="url" id="qr-data" class="big-input" value="https://www.qrcode-monkey.com" placeholder="Pon tu enlace aquí">
             <p class="input-help" id="input-help">Introduce una dirección web completa (incluye https://).</p>
         </div>
 
-        <!-- ==== PANEL: PERSONALIZAR ==== -->
+        <!-- PANEL PERSONALIZAR -->
         <div id="panel-customize" class="hidden fade-in">
 
-            <!-- Colores del frente -->
             <div class="custom-section">
                 <div class="section-title">Color de Frente</div>
                 <div class="flex flex-wrap gap-4 items-center mb-3 text-sm text-gray-600">
@@ -544,7 +605,6 @@
                 </div>
             </div>
 
-            <!-- Ojos -->
             <div class="custom-section">
                 <div class="section-title">Ojos (Esquinas)</div>
                 <label class="check-label mb-2">
@@ -565,7 +625,6 @@
                 </div>
             </div>
 
-            <!-- Fondo -->
             <div class="custom-section">
                 <div class="section-title">Fondo</div>
                 <label class="check-label mb-2">
@@ -580,26 +639,18 @@
                 </div>
             </div>
 
-            <!-- Logo -->
             <div class="custom-section">
                 <div class="section-title">Logo Central</div>
                 <div class="flex items-center gap-4">
-                    <div class="logo-preview" id="logo-preview">
-                        SIN LOGO
-                    </div>
+                    <div class="logo-preview" id="logo-preview">SIN LOGO</div>
                     <div class="flex flex-col gap-2">
                         <input type="file" id="logo-upload" accept="image/*" class="hidden">
-                        <button type="button" id="upload-btn" class="btn-purple">
-                            Usar Imagen
-                        </button>
-                        <button type="button" id="remove-logo" class="text-xs text-red-500 underline hidden" style="background:none;border:none;cursor:pointer;font-family:inherit;">
-                            Eliminar Logo
-                        </button>
+                        <button type="button" id="upload-btn" class="btn-purple">Usar Imagen</button>
+                        <button type="button" id="remove-logo" class="text-xs text-red-500 underline hidden" style="background:none;border:none;cursor:pointer;font-family:inherit;">Eliminar Logo</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Forma del cuerpo -->
             <div class="custom-section">
                 <div class="section-title">Forma del Cuerpo</div>
                 <div class="grid grid-cols-4 gap-2">
@@ -622,7 +673,6 @@
                 </div>
             </div>
 
-            <!-- Forma marco del ojo -->
             <div class="custom-section">
                 <div class="section-title">Forma del Marco</div>
                 <div class="grid grid-cols-3 gap-2">
@@ -641,7 +691,6 @@
                 </div>
             </div>
 
-            <!-- Forma del ojo centro -->
             <div class="custom-section">
                 <div class="section-title">Forma del Centro</div>
                 <div class="grid grid-cols-3 gap-2">
@@ -656,7 +705,6 @@
                 </div>
             </div>
 
-            <!-- Margen -->
             <div class="custom-section">
                 <div class="section-title">Margen (Zona de Seguridad)</div>
                 <div class="flex items-center gap-3">
@@ -665,7 +713,6 @@
                 </div>
             </div>
 
-            <!-- Corrección de errores -->
             <div class="custom-section">
                 <div class="section-title">Nivel de Corrección</div>
                 <select id="error-correction" class="pretty-select">
@@ -687,9 +734,19 @@
 
 </div>
 
+<!-- ==== VISTA PREVIA FLOTANTE ==== -->
+<div id="floating-qr" class="hidden">
+    <button type="button" class="close-btn" id="floating-close" title="Ocultar">×</button>
+    <div class="drag-handle">
+        <span></span><span></span><span></span>
+    </div>
+    <div id="floating-qr-code"></div>
+    <div class="drag-hint">✦ Arrástrame ✦</div>
+</div>
+
 <script>
 /* =============================================================
-   CONFIGURACIÓN INICIAL DEL QR
+   CONFIGURACIÓN QR
 ============================================================= */
 const qrConfig = {
     width: 220,
@@ -706,19 +763,27 @@ const qrConfig = {
     cornersDotOptions: { color: "#000000", type: "square" }
 };
 
+const FLOATING_SIZE = 130;
+
 const qrCode = new QRCodeStyling(qrConfig);
-const previewContainer = document.getElementById('qr-preview');
-qrCode.append(previewContainer);
+qrCode.append(document.getElementById('qr-preview'));
+
+const floatingQRCode = new QRCodeStyling({ ...qrConfig, width: FLOATING_SIZE, height: FLOATING_SIZE });
+floatingQRCode.append(document.getElementById('floating-qr-code'));
 
 let updateTimer = null;
 function updateQR(immediate = false) {
     if (updateTimer) clearTimeout(updateTimer);
-    if (immediate) { qrCode.update(qrConfig); return; }
-    updateTimer = setTimeout(() => qrCode.update(qrConfig), 60);
+    const doUpdate = () => {
+        qrCode.update(qrConfig);
+        floatingQRCode.update({ ...qrConfig, width: FLOATING_SIZE, height: FLOATING_SIZE });
+    };
+    if (immediate) { doUpdate(); return; }
+    updateTimer = setTimeout(doUpdate, 60);
 }
 
 /* =============================================================
-   CONFIGURACIÓN DE TIPOS DE CONTENIDO
+   TIPOS DE CONTENIDO
 ============================================================= */
 const tabConfigs = {
     url: {
@@ -766,20 +831,14 @@ const tabConfigs = {
         defaultValue: '+521234567890',
         inputType: 'tel',
         help: 'Abre un chat directo de WhatsApp.',
-        build: (v) => {
-            const num = v.replace(/[^\d]/g, '');
-            return num ? `https://wa.me/${num}` : ' ';
-        }
+        build: (v) => { const num = v.replace(/[^\d]/g, ''); return num ? `https://wa.me/${num}` : ' '; }
     },
     instagram: {
         placeholder: 'Usuario de Instagram (sin @)',
         defaultValue: 'instagram',
         inputType: 'text',
         help: 'Abre el perfil de Instagram.',
-        build: (v) => {
-            const user = v.trim().replace(/^@/, '');
-            return user ? `https://instagram.com/${user}` : ' ';
-        }
+        build: (v) => { const user = v.trim().replace(/^@/, ''); return user ? `https://instagram.com/${user}` : ' '; }
     },
     youtube: {
         placeholder: 'URL del video o canal',
@@ -867,7 +926,7 @@ qrDataInput.addEventListener('input', () => {
 });
 
 /* =============================================================
-   STEP TABS (Contenido / Personalizar)
+   STEP TABS
 ============================================================= */
 const stepTabs = document.querySelectorAll('.step-tab');
 const panelContent = document.getElementById('panel-content');
@@ -885,6 +944,8 @@ stepTabs.forEach(tab => {
             panelContent.classList.add('hidden');
             panelCustomize.classList.remove('hidden');
         }
+        // Reevaluar visibilidad de la vista flotante al cambiar de pestaña
+        setTimeout(checkFloatingVisibility, 50);
     });
 });
 
@@ -1068,9 +1129,132 @@ document.getElementById('download-png').addEventListener('click', () => qrCode.d
 document.getElementById('download-svg').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "svg" }));
 
 /* =============================================================
+   VISTA PREVIA FLOTANTE — VISIBILIDAD AL HACER SCROLL
+============================================================= */
+const floatingEl = document.getElementById('floating-qr');
+const floatingClose = document.getElementById('floating-close');
+const mainPreviewWrap = document.getElementById('main-preview-wrap');
+
+let userDismissedFloating = false;
+
+function checkFloatingVisibility() {
+    // Si el usuario la cerró manualmente, no mostrarla
+    if (userDismissedFloating) {
+        floatingEl.classList.add('hidden');
+        return;
+    }
+    // Solo se muestra cuando la pestaña Personalizar está activa
+    const inCustomize = !panelCustomize.classList.contains('hidden');
+    if (!inCustomize) {
+        floatingEl.classList.add('hidden');
+        return;
+    }
+    // Mostrar cuando el preview principal ya no se ve
+    const rect = mainPreviewWrap.getBoundingClientRect();
+    const previewOutOfView = rect.bottom < 60;
+    floatingEl.classList.toggle('hidden', !previewOutOfView);
+}
+
+window.addEventListener('scroll', checkFloatingVisibility, { passive: true });
+window.addEventListener('resize', () => {
+    clampFloatingToViewport();
+    checkFloatingVisibility();
+});
+
+floatingClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDismissedFloating = true;
+    floatingEl.classList.add('hidden');
+});
+
+// Al cambiar de pestaña, resetear el "dismissed" para permitir que vuelva a aparecer
+stepTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        userDismissedFloating = false;
+    });
+});
+
+/* =============================================================
+   ARRASTRAR VISTA PREVIA FLOTANTE (Pointer Events)
+============================================================= */
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+let hasMoved = false;
+let pointerId = null;
+
+floatingEl.addEventListener('pointerdown', (e) => {
+    // Ignorar clics en el botón de cerrar
+    if (e.target.closest('.close-btn')) return;
+
+    isDragging = true;
+    hasMoved = false;
+    pointerId = e.pointerId;
+
+    const rect = floatingEl.getBoundingClientRect();
+    // Fijar posición actual como left/top
+    floatingEl.style.left = rect.left + 'px';
+    floatingEl.style.top = rect.top + 'px';
+    floatingEl.style.right = 'auto';
+    floatingEl.style.bottom = 'auto';
+    floatingEl.style.marginTop = '0';
+
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+
+    floatingEl.classList.add('dragging');
+    floatingEl.setPointerCapture(e.pointerId);
+    e.preventDefault();
+});
+
+floatingEl.addEventListener('pointermove', (e) => {
+    if (!isDragging || e.pointerId !== pointerId) return;
+
+    hasMoved = true;
+    floatingEl.classList.add('user-moved');
+
+    let newX = e.clientX - dragOffsetX;
+    let newY = e.clientY - dragOffsetY;
+
+    // Limitar dentro del viewport
+    const rect = floatingEl.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width;
+    const maxY = window.innerHeight - rect.height;
+    newX = Math.max(8, Math.min(maxX - 8, newX));
+    newY = Math.max(8, Math.min(maxY - 8, newY));
+
+    floatingEl.style.left = newX + 'px';
+    floatingEl.style.top = newY + 'px';
+});
+
+function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    floatingEl.classList.remove('dragging');
+    if (pointerId !== null && floatingEl.hasPointerCapture?.(pointerId)) {
+        floatingEl.releasePointerCapture(pointerId);
+    }
+    pointerId = null;
+}
+
+floatingEl.addEventListener('pointerup', endDrag);
+floatingEl.addEventListener('pointercancel', endDrag);
+floatingEl.addEventListener('lostpointercapture', endDrag);
+
+function clampFloatingToViewport() {
+    if (!floatingEl.style.left) return; // aún no ha sido movida
+    const rect = floatingEl.getBoundingClientRect();
+    let x = rect.left;
+    let y = rect.top;
+    const maxX = window.innerWidth - rect.width - 8;
+    const maxY = window.innerHeight - rect.height - 8;
+    x = Math.max(8, Math.min(maxX, x));
+    y = Math.max(8, Math.min(maxY, y));
+    floatingEl.style.left = x + 'px';
+    floatingEl.style.top = y + 'px';
+}
+
+/* =============================================================
    INICIALIZACIÓN
 ============================================================= */
 setActiveTab('url');
-</script>
-</body>
-</html>
