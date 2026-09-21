@@ -143,6 +143,12 @@
             content: ''; width: 3px; height: 14px;
             background: var(--purple); border-radius: 2px;
         }
+        .section-note {
+            font-size: 11px;
+            color: #9ca3af;
+            margin: -6px 0 10px;
+            line-height: 1.3;
+        }
 
         .color-input-group {
             display: flex; align-items: center;
@@ -189,9 +195,9 @@
 
         .shape-btn {
             border: 2px solid #e5e7eb; border-radius: 12px;
-            padding: 10px 4px; display: flex;
+            padding: 12px 6px; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
-            gap: 4px; cursor: pointer; transition: all 0.2s;
+            gap: 6px; cursor: pointer; transition: all 0.2s;
             user-select: none; background: #fff; color: #374151;
         }
         .shape-btn:active { transform: scale(0.96); }
@@ -201,7 +207,7 @@
             background-color: var(--purple-lighter);
             color: var(--purple);
         }
-        .shape-btn span { font-size: 9px; color: #6b7280; font-weight: 500; text-align: center; line-height: 1.1; }
+        .shape-btn span { font-size: 10px; color: #6b7280; font-weight: 500; text-align: center; line-height: 1.1; }
         .shape-btn.active span { color: var(--purple); font-weight: 700; }
 
         input[type="range"] {
@@ -576,10 +582,11 @@
                 </div>
             </div>
 
-            <!-- FORMA DEL MARCO DEL OJO - TODAS LAS OPCIONES -->
+            <!-- FORMA DEL MARCO DEL OJO - SOLO VÁLIDAS -->
             <div class="custom-section">
                 <div class="section-title">Forma del Marco del Ojo</div>
-                <div class="grid grid-cols-4 gap-2">
+                <p class="section-note">La librería solo soporta estas 3 formas para el marco.</p>
+                <div class="grid grid-cols-3 gap-2">
                     <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square">
                         <div class="w-6 h-6 border-4 border-current"></div>
                         <span>Cuadrado</span>
@@ -588,33 +595,18 @@
                         <div class="w-6 h-6 border-4 border-current rounded-full"></div>
                         <span>Círculo</span>
                     </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="rounded">
-                        <div class="w-6 h-6 border-4 border-current rounded-md"></div>
-                        <span>Redondo</span>
-                    </div>
                     <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
                         <div class="w-6 h-6 border-4 border-current rounded-xl"></div>
                         <span>Extra Red.</span>
                     </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="dots">
-                        <div class="w-6 h-6 border-4 border-current border-dotted rounded-full"></div>
-                        <span>Puntos</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="classy">
-                        <div class="w-6 h-6 border-4 border-current" style="border-top-right-radius:8px;"></div>
-                        <span>Elegante</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="classy-rounded">
-                        <div class="w-6 h-6 border-4 border-current rounded-md" style="border-top-right-radius:12px;"></div>
-                        <span>Elegante Red.</span>
-                    </div>
                 </div>
             </div>
 
-            <!-- FORMA DEL CENTRO DEL OJO - TODAS LAS OPCIONES -->
+            <!-- FORMA DEL CENTRO DEL OJO - SOLO VÁLIDAS -->
             <div class="custom-section">
                 <div class="section-title">Forma del Centro del Ojo</div>
-                <div class="grid grid-cols-4 gap-2">
+                <p class="section-note">La librería solo soporta 2 formas para el centro.</p>
+                <div class="grid grid-cols-3 gap-2">
                     <div class="shape-btn active" data-type="cornersDotOptions" data-value="square">
                         <div class="w-5 h-5 bg-current"></div>
                         <span>Cuadrado</span>
@@ -622,26 +614,6 @@
                     <div class="shape-btn" data-type="cornersDotOptions" data-value="dot">
                         <div class="w-5 h-5 bg-current rounded-full"></div>
                         <span>Círculo</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="rounded">
-                        <div class="w-5 h-5 bg-current rounded-md"></div>
-                        <span>Redondo</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="extra-rounded">
-                        <div class="w-5 h-5 bg-current rounded-xl"></div>
-                        <span>Extra Red.</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="dots">
-                        <div class="w-5 h-5 bg-current" style="border-radius:50%;background:radial-gradient(circle, currentColor 30%, transparent 70%);"></div>
-                        <span>Puntos</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="classy">
-                        <div class="w-5 h-5 bg-current" style="border-top-right-radius:6px;"></div>
-                        <span>Elegante</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="classy-rounded">
-                        <div class="w-5 h-5 bg-current rounded-md" style="border-top-right-radius:10px;"></div>
-                        <span>Elegante Red.</span>
                     </div>
                 </div>
             </div>
@@ -702,6 +674,11 @@ const qrConfig = {
     cornersSquareOptions: { color: "#000000", type: "square" },
     cornersDotOptions: { color: "#000000", type: "square" }
 };
+
+/* Valores permitidos por qr-code-styling v1.5.0 */
+const VALID_CORNER_SQUARE = ["square", "dot", "extra-rounded"];
+const VALID_CORNER_DOT = ["square", "dot"];
+const VALID_DOT = ["square", "dots", "rounded", "extra-rounded", "classy", "classy-rounded"];
 
 const FLOATING_SIZE = 120;
 
@@ -1024,8 +1001,15 @@ removeLogoBtn.addEventListener('click', () => {
 });
 
 /* =============================================================
-   FORMAS
+   FORMAS - Con validación de valores
 ============================================================= */
+function isValidValue(type, value) {
+    if (type === 'dotsOptions') return VALID_DOT.includes(value);
+    if (type === 'cornersSquareOptions') return VALID_CORNER_SQUARE.includes(value);
+    if (type === 'cornersDotOptions') return VALID_CORNER_DOT.includes(value);
+    return false;
+}
+
 document.querySelectorAll('.shape-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const type = btn.getAttribute('data-type');
@@ -1039,7 +1023,14 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
             console.warn(`qrConfig["${type}"] no existe.`);
             return;
         }
-        qrConfig[type].type = value;
+
+        if (!isValidValue(type, value)) {
+            console.warn(`Valor "${value}" no soportado para ${type}. Se usará "square".`);
+            qrConfig[type].type = 'square';
+        } else {
+            qrConfig[type].type = value;
+        }
+
         updateQR(true);
     });
 });
