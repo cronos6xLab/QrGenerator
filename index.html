@@ -127,22 +127,95 @@
             border-radius: 16px; display: inline-block;
         }
 
+        /* ============================================================
+           SECCIONES ACORDEÓN DE PERSONALIZACIÓN
+        ============================================================ */
         .custom-section {
-            padding: 16px 0;
             border-bottom: 1px solid #f3f4f6;
+            margin: 0 -6px;
         }
-        .custom-section:last-child { border-bottom: none; padding-bottom: 4px; }
-        .custom-section:first-child { padding-top: 4px; }
-        .section-title {
-            font-size: 13px; font-weight: 700;
-            color: #6b7280; text-transform: uppercase;
-            letter-spacing: 0.4px; margin-bottom: 12px;
-            display: flex; align-items: center; gap: 8px;
+        .custom-section:last-child { border-bottom: none; }
+
+        .custom-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            border-radius: 10px;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
         }
-        .section-title::before {
-            content: ''; width: 3px; height: 14px;
-            background: var(--purple); border-radius: 2px;
+        .custom-header:active { background: #faf5ff; }
+
+        .custom-header-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
         }
+        .custom-header-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--purple);
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+        .custom-section.open .custom-header-title { color: var(--purple); }
+
+        .custom-header-chevron {
+            width: 18px;
+            height: 18px;
+            color: #9ca3af;
+            transition: transform 0.3s ease, color 0.2s;
+            flex-shrink: 0;
+        }
+        .custom-section.open .custom-header-chevron {
+            transform: rotate(180deg);
+            color: var(--purple);
+        }
+
+        .custom-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.3s ease, opacity 0.25s ease;
+            opacity: 0;
+            padding: 0 6px;
+        }
+        .custom-section.open .custom-body {
+            max-height: 900px;
+            opacity: 1;
+            padding: 0 6px 16px;
+        }
+
+        /* Indicador de "hay cambios activos" */
+        .custom-badge {
+            display: none;
+            width: 8px;
+            height: 8px;
+            background: var(--purple);
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: pulseBadge 2s ease-in-out infinite;
+        }
+        .custom-section.has-changes .custom-badge { display: inline-block; }
+        @keyframes pulseBadge {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.85); }
+        }
+
+        /* ============================================================ */
+
         .section-note {
             font-size: 11px;
             color: #9ca3af;
@@ -481,159 +554,237 @@
 
         <div id="panel-customize" class="hidden fade-in">
 
-            <div class="custom-section">
-                <div class="section-title">Color de Frente</div>
-                <div class="flex flex-wrap gap-4 items-center mb-3 text-sm text-gray-600">
-                    <label class="radio-label">
-                        <input type="radio" name="color-type" value="solid" class="custom-radio" checked>
-                        Sólido
+            <!-- SECCIÓN 1: COLOR DE FRENTE (abierta por defecto) -->
+            <div class="custom-section open" data-section="color-front">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Color de Frente
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <div class="flex flex-wrap gap-4 items-center mb-3 text-sm text-gray-600">
+                        <label class="radio-label">
+                            <input type="radio" name="color-type" value="solid" class="custom-radio" checked>
+                            Sólido
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="color-type" value="gradient" class="custom-radio">
+                            Desvanecido
+                        </label>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="color-input-group">
+                            <input type="color" id="color-front-1" value="#000000">
+                            <input type="text" id="hex-front-1" value="#000000" maxlength="7">
+                        </div>
+                        <div id="gradient-color-container" class="color-input-group hidden">
+                            <input type="color" id="color-front-2" value="#3b82f6">
+                            <input type="text" id="hex-front-2" value="#3B82F6" maxlength="7">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: OJOS -->
+            <div class="custom-section" data-section="eyes">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Ojos (Esquinas)
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <label class="check-label mb-2">
+                        <input type="checkbox" id="custom-eye-frame-check" class="custom-checkbox">
+                        <strong>Personalizar Marco</strong>
                     </label>
-                    <label class="radio-label">
-                        <input type="radio" name="color-type" value="gradient" class="custom-radio">
-                        Desvanecido
+                    <div id="eye-frame-color-container" class="color-input-group hidden mb-3 mt-2">
+                        <input type="color" id="color-eye-frame" value="#ff0000">
+                        <input type="text" id="hex-eye-frame" value="#FF0000" maxlength="7">
+                    </div>
+                    <label class="check-label mb-2">
+                        <input type="checkbox" id="custom-eye-dot-check" class="custom-checkbox">
+                        <strong>Personalizar Centro</strong>
                     </label>
-                </div>
-                <div class="space-y-3">
-                    <div class="color-input-group">
-                        <input type="color" id="color-front-1" value="#000000">
-                        <input type="text" id="hex-front-1" value="#000000" maxlength="7">
-                    </div>
-                    <div id="gradient-color-container" class="color-input-group hidden">
-                        <input type="color" id="color-front-2" value="#3b82f6">
-                        <input type="text" id="hex-front-2" value="#3B82F6" maxlength="7">
+                    <div id="eye-dot-color-container" class="color-input-group hidden mt-2">
+                        <input type="color" id="color-eye-dot" value="#00ff00">
+                        <input type="text" id="hex-eye-dot" value="#00FF00" maxlength="7">
                     </div>
                 </div>
             </div>
 
-            <div class="custom-section">
-                <div class="section-title">Ojos (Esquinas)</div>
-                <label class="check-label mb-2">
-                    <input type="checkbox" id="custom-eye-frame-check" class="custom-checkbox">
-                    <strong>Personalizar Marco</strong>
-                </label>
-                <div id="eye-frame-color-container" class="color-input-group hidden mb-3 mt-2">
-                    <input type="color" id="color-eye-frame" value="#ff0000">
-                    <input type="text" id="hex-eye-frame" value="#FF0000" maxlength="7">
-                </div>
-                <label class="check-label mb-2">
-                    <input type="checkbox" id="custom-eye-dot-check" class="custom-checkbox">
-                    <strong>Personalizar Centro</strong>
-                </label>
-                <div id="eye-dot-color-container" class="color-input-group hidden mt-2">
-                    <input type="color" id="color-eye-dot" value="#00ff00">
-                    <input type="text" id="hex-eye-dot" value="#00FF00" maxlength="7">
-                </div>
-            </div>
-
-            <div class="custom-section">
-                <div class="section-title">Fondo</div>
-                <label class="check-label mb-2">
-                    <input type="checkbox" id="transparent-bg-check" class="custom-checkbox">
-                    <strong>Fondo Transparente</strong> <span style="font-size:12px;color:#9ca3af;">(SVG/PNG)</span>
-                </label>
-                <div id="bg-color-wrapper" class="mt-2">
-                    <div class="color-input-group">
-                        <input type="color" id="color-bg" value="#ffffff">
-                        <input type="text" id="hex-bg" value="#FFFFFF" maxlength="7">
+            <!-- SECCIÓN 3: FONDO -->
+            <div class="custom-section" data-section="background">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Fondo
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <label class="check-label mb-2">
+                        <input type="checkbox" id="transparent-bg-check" class="custom-checkbox">
+                        <strong>Fondo Transparente</strong> <span style="font-size:12px;color:#9ca3af;">(SVG/PNG)</span>
+                    </label>
+                    <div id="bg-color-wrapper" class="mt-2">
+                        <div class="color-input-group">
+                            <input type="color" id="color-bg" value="#ffffff">
+                            <input type="text" id="hex-bg" value="#FFFFFF" maxlength="7">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="custom-section">
-                <div class="section-title">Logo Central</div>
-                <div class="flex items-center gap-4">
-                    <div class="logo-preview" id="logo-preview">SIN LOGO</div>
-                    <div class="flex flex-col gap-2">
-                        <input type="file" id="logo-upload" accept="image/*" class="hidden">
-                        <button type="button" id="upload-btn" class="btn-purple">Usar Imagen</button>
-                        <button type="button" id="remove-logo" class="text-xs text-red-500 underline hidden" style="background:none;border:none;cursor:pointer;font-family:inherit;">Eliminar Logo</button>
+            <!-- SECCIÓN 4: LOGO -->
+            <div class="custom-section" data-section="logo">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Logo Central
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <div class="flex items-center gap-4">
+                        <div class="logo-preview" id="logo-preview">SIN LOGO</div>
+                        <div class="flex flex-col gap-2">
+                            <input type="file" id="logo-upload" accept="image/*" class="hidden">
+                            <button type="button" id="upload-btn" class="btn-purple">Usar Imagen</button>
+                            <button type="button" id="remove-logo" class="text-xs text-red-500 underline hidden" style="background:none;border:none;cursor:pointer;font-family:inherit;">Eliminar Logo</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- FORMA DEL CUERPO -->
-            <div class="custom-section">
-                <div class="section-title">Forma del Cuerpo</div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="shape-btn active" data-type="dotsOptions" data-value="square">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>
-                        <span>Cuadrado</span>
-                    </div>
-                    <div class="shape-btn" data-type="dotsOptions" data-value="dots">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-                        <span>Puntos</span>
-                    </div>
-                    <div class="shape-btn" data-type="dotsOptions" data-value="rounded">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
-                        <span>Redondo</span>
-                    </div>
-                    <div class="shape-btn" data-type="dotsOptions" data-value="extra-rounded">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="3"/><rect x="14" y="4" width="6" height="6" rx="3"/><rect x="4" y="14" width="6" height="6" rx="3"/><rect x="14" y="14" width="6" height="6" rx="3"/></svg>
-                        <span>Extra Redondo</span>
-                    </div>
-                    <div class="shape-btn" data-type="dotsOptions" data-value="classy">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v2H6v4H4zM14 4h6v6h-2V6h-4zM4 14h2v4h4v2H4zM18 14h2v6h-6v-2h4z"/></svg>
-                        <span>Elegante</span>
-                    </div>
-                    <div class="shape-btn" data-type="dotsOptions" data-value="classy-rounded">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h8v3H7v5H4zM12 4h8v8h-3V7h-5zM4 12h3v5h5v3H4zM17 12h3v8h-8v-3h5z"/></svg>
-                        <span>Elegante Red.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- FORMA DEL MARCO DEL OJO - SOLO VÁLIDAS -->
-            <div class="custom-section">
-                <div class="section-title">Forma del Marco del Ojo</div>
-                <p class="section-note">La librería solo soporta estas 3 formas para el marco.</p>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square">
-                        <div class="w-6 h-6 border-4 border-current"></div>
-                        <span>Cuadrado</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot">
-                        <div class="w-6 h-6 border-4 border-current rounded-full"></div>
-                        <span>Círculo</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
-                        <div class="w-6 h-6 border-4 border-current rounded-xl"></div>
-                        <span>Extra Red.</span>
+            <!-- SECCIÓN 5: FORMA DEL CUERPO -->
+            <div class="custom-section" data-section="body-shape">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Forma del Cuerpo
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="shape-btn active" data-type="dotsOptions" data-value="square">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>
+                            <span>Cuadrado</span>
+                        </div>
+                        <div class="shape-btn" data-type="dotsOptions" data-value="dots">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="6" r="2"/><circle cx="12" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="12" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                            <span>Puntos</span>
+                        </div>
+                        <div class="shape-btn" data-type="dotsOptions" data-value="rounded">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
+                            <span>Redondo</span>
+                        </div>
+                        <div class="shape-btn" data-type="dotsOptions" data-value="extra-rounded">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="3"/><rect x="14" y="4" width="6" height="6" rx="3"/><rect x="4" y="14" width="6" height="6" rx="3"/><rect x="14" y="14" width="6" height="6" rx="3"/></svg>
+                            <span>Extra Redondo</span>
+                        </div>
+                        <div class="shape-btn" data-type="dotsOptions" data-value="classy">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v2H6v4H4zM14 4h6v6h-2V6h-4zM4 14h2v4h4v2H4zM18 14h2v6h-6v-2h4z"/></svg>
+                            <span>Elegante</span>
+                        </div>
+                        <div class="shape-btn" data-type="dotsOptions" data-value="classy-rounded">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h8v3H7v5H4zM12 4h8v8h-3V7h-5zM4 12h3v5h5v3H4zM17 12h3v8h-8v-3h5z"/></svg>
+                            <span>Elegante Red.</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- FORMA DEL CENTRO DEL OJO - SOLO VÁLIDAS -->
-            <div class="custom-section">
-                <div class="section-title">Forma del Centro del Ojo</div>
-                <p class="section-note">La librería solo soporta 2 formas para el centro.</p>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="shape-btn active" data-type="cornersDotOptions" data-value="square">
-                        <div class="w-5 h-5 bg-current"></div>
-                        <span>Cuadrado</span>
-                    </div>
-                    <div class="shape-btn" data-type="cornersDotOptions" data-value="dot">
-                        <div class="w-5 h-5 bg-current rounded-full"></div>
-                        <span>Círculo</span>
+            <!-- SECCIÓN 6: FORMA DEL MARCO DEL OJO -->
+            <div class="custom-section" data-section="frame-shape">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Forma del Marco del Ojo
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <p class="section-note">La librería solo soporta estas 3 formas para el marco.</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="shape-btn active" data-type="cornersSquareOptions" data-value="square">
+                            <div class="w-6 h-6 border-4 border-current"></div>
+                            <span>Cuadrado</span>
+                        </div>
+                        <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot">
+                            <div class="w-6 h-6 border-4 border-current rounded-full"></div>
+                            <span>Círculo</span>
+                        </div>
+                        <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
+                            <div class="w-6 h-6 border-4 border-current rounded-xl"></div>
+                            <span>Extra Red.</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="custom-section">
-                <div class="section-title">Margen (Zona de Seguridad)</div>
-                <div class="flex items-center gap-3">
-                    <input type="range" id="qr-margin" min="0" max="40" value="10" class="w-full">
-                    <span id="margin-value" class="text-sm font-bold w-8 text-right" style="color:var(--purple)">10</span>
+            <!-- SECCIÓN 7: FORMA DEL CENTRO DEL OJO -->
+            <div class="custom-section" data-section="dot-shape">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Forma del Centro del Ojo
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <p class="section-note">La librería solo soporta 2 formas para el centro.</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="shape-btn active" data-type="cornersDotOptions" data-value="square">
+                            <div class="w-5 h-5 bg-current"></div>
+                            <span>Cuadrado</span>
+                        </div>
+                        <div class="shape-btn" data-type="cornersDotOptions" data-value="dot">
+                            <div class="w-5 h-5 bg-current rounded-full"></div>
+                            <span>Círculo</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="custom-section">
-                <div class="section-title">Nivel de Corrección</div>
-                <select id="error-correction" class="pretty-select">
-                    <option value="L">Bajo (7%) — Sin logo</option>
-                    <option value="M">Medio (15%)</option>
-                    <option value="Q" selected>Alto (25%) — Con logo</option>
-                    <option value="H">Máximo (30%)</option>
-                </select>
+            <!-- SECCIÓN 8: MARGEN -->
+            <div class="custom-section" data-section="margin">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Margen (Zona de Seguridad)
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="qr-margin" min="0" max="40" value="10" class="w-full">
+                        <span id="margin-value" class="text-sm font-bold w-8 text-right" style="color:var(--purple)">10</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 9: NIVEL DE CORRECCIÓN -->
+            <div class="custom-section" data-section="correction">
+                <button type="button" class="custom-header">
+                    <span class="custom-header-title">
+                        Nivel de Corrección
+                        <span class="custom-badge"></span>
+                    </span>
+                    <svg class="custom-header-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="custom-body">
+                    <select id="error-correction" class="pretty-select">
+                        <option value="L">Bajo (7%) — Sin logo</option>
+                        <option value="M">Medio (15%)</option>
+                        <option value="Q" selected>Alto (25%) — Con logo</option>
+                        <option value="H">Máximo (30%)</option>
+                    </select>
+                </div>
             </div>
 
         </div>
@@ -675,7 +826,6 @@ const qrConfig = {
     cornersDotOptions: { color: "#000000", type: "square" }
 };
 
-/* Valores permitidos por qr-code-styling v1.5.0 */
 const VALID_CORNER_SQUARE = ["square", "dot", "extra-rounded"];
 const VALID_CORNER_DOT = ["square", "dot"];
 const VALID_DOT = ["square", "dots", "rounded", "extra-rounded", "classy", "classy-rounded"];
@@ -866,6 +1016,27 @@ stepTabs.forEach(tab => {
 });
 
 /* =============================================================
+   ACORDEÓN DE SECCIONES DE PERSONALIZACIÓN
+   Solo una abierta a la vez
+============================================================= */
+const customSections = document.querySelectorAll('.custom-section');
+
+customSections.forEach(section => {
+    const header = section.querySelector('.custom-header');
+    header.addEventListener('click', () => {
+        const isOpen = section.classList.contains('open');
+
+        // Cerrar todas
+        customSections.forEach(s => s.classList.remove('open'));
+
+        // Si no estaba abierta, abrirla
+        if (!isOpen) {
+            section.classList.add('open');
+        }
+    });
+});
+
+/* =============================================================
    COLORES
 ============================================================= */
 const colorTypeRadios = document.querySelectorAll('input[name="color-type"]');
@@ -910,6 +1081,11 @@ function syncColorInputs(colorInput, textInput, callback) {
     });
 }
 
+function markSectionAsChanged(sectionName) {
+    const section = document.querySelector(`.custom-section[data-section="${sectionName}"]`);
+    if (section) section.classList.add('has-changes');
+}
+
 function applyColors() {
     const isGradient = document.querySelector('input[name="color-type"]:checked').value === 'gradient';
     const hasCustomEyeFrame = customEyeFrameCheck.checked;
@@ -951,22 +1127,35 @@ syncColorInputs(colorBg, hexBg, applyColors);
 colorTypeRadios.forEach(radio => {
     radio.addEventListener('change', () => {
         gradientContainer.classList.toggle('hidden', radio.value !== 'gradient');
+        markSectionAsChanged('color-front');
         applyColors();
     });
 });
 
 customEyeFrameCheck.addEventListener('change', (e) => {
     eyeFrameColorContainer.classList.toggle('hidden', !e.target.checked);
+    markSectionAsChanged('eyes');
     applyColors();
 });
 customEyeDotCheck.addEventListener('change', (e) => {
     eyeDotColorContainer.classList.toggle('hidden', !e.target.checked);
+    markSectionAsChanged('eyes');
     applyColors();
 });
 transparentBgCheck.addEventListener('change', (e) => {
     bgColorWrapper.style.opacity = e.target.checked ? '0.4' : '1';
     bgColorWrapper.style.pointerEvents = e.target.checked ? 'none' : 'auto';
+    markSectionAsChanged('background');
     applyColors();
+});
+
+// Marcar secciones al cambiar color
+[colorFront1, colorFront2, colorEyeFrame, colorEyeDot, colorBg].forEach(el => {
+    el.addEventListener('input', () => {
+        if (el === colorEyeFrame || el === colorEyeDot) markSectionAsChanged('eyes');
+        else if (el === colorBg) markSectionAsChanged('background');
+        else markSectionAsChanged('color-front');
+    });
 });
 
 /* =============================================================
@@ -987,6 +1176,7 @@ logoUpload.addEventListener('change', (e) => {
         qrConfig.image = event.target.result;
         logoPreview.innerHTML = `<img src="${event.target.result}" style="width:100%;height:100%;object-fit:contain;">`;
         removeLogoBtn.classList.remove('hidden');
+        markSectionAsChanged('logo');
         updateQR(true);
     };
     reader.readAsDataURL(file);
@@ -997,11 +1187,12 @@ removeLogoBtn.addEventListener('click', () => {
     logoPreview.innerHTML = "SIN LOGO";
     logoUpload.value = "";
     removeLogoBtn.classList.add('hidden');
+    markSectionAsChanged('logo');
     updateQR(true);
 });
 
 /* =============================================================
-   FORMAS - Con validación de valores
+   FORMAS - Con validación
 ============================================================= */
 function isValidValue(type, value) {
     if (type === 'dotsOptions') return VALID_DOT.includes(value);
@@ -1019,10 +1210,7 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         group.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        if (!qrConfig[type]) {
-            console.warn(`qrConfig["${type}"] no existe.`);
-            return;
-        }
+        if (!qrConfig[type]) return;
 
         if (!isValidValue(type, value)) {
             console.warn(`Valor "${value}" no soportado para ${type}. Se usará "square".`);
@@ -1030,6 +1218,11 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         } else {
             qrConfig[type].type = value;
         }
+
+        // Marcar sección como cambiada
+        if (type === 'dotsOptions') markSectionAsChanged('body-shape');
+        else if (type === 'cornersSquareOptions') markSectionAsChanged('frame-shape');
+        else if (type === 'cornersDotOptions') markSectionAsChanged('dot-shape');
 
         updateQR(true);
     });
@@ -1043,12 +1236,14 @@ const marginValue = document.getElementById('margin-value');
 marginSlider.addEventListener('input', (e) => {
     qrConfig.margin = parseInt(e.target.value, 10);
     marginValue.textContent = e.target.value;
+    markSectionAsChanged('margin');
     updateQR();
 });
 
 const errorCorrectionSelect = document.getElementById('error-correction');
 errorCorrectionSelect.addEventListener('change', (e) => {
     qrConfig.qrOptions.errorCorrectionLevel = e.target.value;
+    markSectionAsChanged('correction');
     updateQR(true);
 });
 
