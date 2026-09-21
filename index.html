@@ -31,7 +31,6 @@
             min-height: 100vh;
         }
 
-        /* ==== PILLS HORIZONTALES ==== */
         .pills-bar {
             display: flex;
             gap: 8px;
@@ -67,12 +66,8 @@
         }
         .pill:active { transform: scale(0.96); }
         .pill svg { width: 20px; height: 20px; flex-shrink: 0; }
-        .pill.active {
-            background: var(--purple-light);
-            color: var(--purple);
-        }
+        .pill.active { background: var(--purple-light); color: var(--purple); }
 
-        /* ==== TARJETA PRINCIPAL ==== */
         .main-card {
             background: #ffffff;
             border-radius: 26px;
@@ -81,7 +76,6 @@
             margin-bottom: 16px;
         }
 
-        /* ==== STEP TABS ==== */
         .step-tabs {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -89,53 +83,30 @@
             margin-bottom: 18px;
         }
         .step-tab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 12px;
-            border-radius: 14px;
-            background: var(--gray-pill);
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--gray-text);
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 14px 12px;
+            border-radius: 14px; background: var(--gray-pill);
+            font-weight: 700; font-size: 15px;
+            color: var(--gray-text); cursor: pointer;
+            border: none; transition: all 0.2s;
             font-family: inherit;
         }
         .step-tab:active { transform: scale(0.98); }
-        .step-tab.active {
-            background: var(--purple-light);
-            color: var(--purple);
-        }
+        .step-tab.active { background: var(--purple-light); color: var(--purple); }
         .step-num {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: #374151;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
+            width: 26px; height: 26px; border-radius: 50%;
+            background: #374151; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700;
         }
         .step-tab.active .step-num { background: var(--purple); }
 
-        /* ==== INPUT ==== */
         .big-input {
-            width: 100%;
-            padding: 20px 18px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 14px;
-            font-size: 16px;
-            color: #374151;
-            outline: none;
-            transition: all 0.2s;
-            background: #fff;
-            font-family: inherit;
-            box-sizing: border-box;
+            width: 100%; padding: 20px 18px;
+            border: 1.5px solid #e5e7eb; border-radius: 14px;
+            font-size: 16px; color: #374151; outline: none;
+            transition: all 0.2s; background: #fff;
+            font-family: inherit; box-sizing: border-box;
         }
         .big-input::placeholder { color: #9ca3af; }
         .big-input:focus {
@@ -143,28 +114,19 @@
             box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.10);
         }
         .input-help {
-            font-size: 12px;
-            color: #9ca3af;
-            margin: 8px 4px 0;
-            line-height: 1.4;
+            font-size: 12px; color: #9ca3af;
+            margin: 8px 4px 0; line-height: 1.4;
         }
 
-        /* ==== PREVIEW QR ==== */
         .qr-preview-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 8px 0 20px;
-            min-height: 240px;
+            display: flex; justify-content: center; align-items: center;
+            padding: 8px 0 20px; min-height: 240px;
         }
         #qr-preview {
-            background: white;
-            padding: 6px;
-            border-radius: 16px;
-            display: inline-block;
+            background: white; padding: 6px;
+            border-radius: 16px; display: inline-block;
         }
 
-        /* ==== SECCIONES ==== */
         .custom-section {
             padding: 16px 0;
             border-bottom: 1px solid #f3f4f6;
@@ -172,71 +134,45 @@
         .custom-section:last-child { border-bottom: none; padding-bottom: 4px; }
         .custom-section:first-child { padding-top: 4px; }
         .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 13px; font-weight: 700;
+            color: #6b7280; text-transform: uppercase;
+            letter-spacing: 0.4px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
         }
         .section-title::before {
-            content: '';
-            width: 3px;
-            height: 14px;
-            background: var(--purple);
-            border-radius: 2px;
+            content: ''; width: 3px; height: 14px;
+            background: var(--purple); border-radius: 2px;
         }
 
-        /* ==== COLOR INPUT ==== */
         .color-input-group {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            height: 46px;
-            transition: border-color 0.2s;
+            display: flex; align-items: center;
+            background: #fff; border: 1.5px solid #e5e7eb;
+            border-radius: 12px; overflow: hidden;
+            height: 46px; transition: border-color 0.2s;
         }
         .color-input-group:focus-within { border-color: var(--purple); }
         .color-input-group input[type="color"] {
-            -webkit-appearance: none;
-            border: none;
-            width: 46px;
-            height: 100%;
-            cursor: pointer;
-            padding: 0;
-            background: transparent;
+            -webkit-appearance: none; border: none;
+            width: 46px; height: 100%; cursor: pointer;
+            padding: 0; background: transparent;
         }
         .color-input-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 4px; }
-        .color-input-group input[type="color"]::-webkit-color-swatch {
-            border: none; border-radius: 8px;
-        }
+        .color-input-group input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; }
         .color-input-group input[type="text"] {
             border: none; outline: none; padding: 0 14px;
             width: 100%; height: 100%;
-            text-transform: uppercase;
-            font-size: 14px; color: #374151;
-            font-family: 'SF Mono', Menlo, monospace;
-            background: transparent;
-            letter-spacing: 0.5px;
+            text-transform: uppercase; font-size: 14px;
+            color: #374151; font-family: 'SF Mono', Menlo, monospace;
+            background: transparent; letter-spacing: 0.5px;
         }
 
-        /* ==== RADIO / CHECKBOX ==== */
         .custom-radio, .custom-checkbox {
             appearance: none; -webkit-appearance: none;
             width: 20px; height: 20px;
-            border: 2px solid #d1d5db;
-            border-radius: 50%;
-            outline: none; cursor: pointer;
-            position: relative;
-            display: inline-flex;
-            align-items: center; justify-content: center;
-            transition: all 0.2s; flex-shrink: 0;
-            margin: 0;
+            border: 2px solid #d1d5db; border-radius: 50%;
+            outline: none; cursor: pointer; position: relative;
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.2s; flex-shrink: 0; margin: 0;
         }
         .custom-checkbox { border-radius: 6px; }
         .custom-radio:checked, .custom-checkbox:checked {
@@ -251,21 +187,12 @@
             font-weight: bold; line-height: 1;
         }
 
-        /* ==== SHAPE BTNS ==== */
         .shape-btn {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 10px 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-            background: #fff;
-            color: #374151;
+            border: 2px solid #e5e7eb; border-radius: 12px;
+            padding: 10px 6px; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            gap: 5px; cursor: pointer; transition: all 0.2s;
+            user-select: none; background: #fff; color: #374151;
         }
         .shape-btn:active { transform: scale(0.96); }
         .shape-btn:hover { border-color: #d1d5db; }
@@ -277,11 +204,10 @@
         .shape-btn span { font-size: 10px; color: #6b7280; font-weight: 500; }
         .shape-btn.active span { color: var(--purple); font-weight: 700; }
 
-        /* ==== RANGE ==== */
         input[type="range"] {
             -webkit-appearance: none; appearance: none;
-            width: 100%; background: #e5e7eb; height: 6px;
-            border-radius: 4px; outline: none;
+            width: 100%; background: #e5e7eb;
+            height: 6px; border-radius: 4px; outline: none;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none; appearance: none;
@@ -297,31 +223,25 @@
             box-shadow: 0 2px 6px rgba(147, 51, 234, 0.35);
         }
 
-        /* ==== SELECT ==== */
         .pretty-select {
             width: 100%; padding: 12px 14px;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 12px; font-size: 14px;
-            background: #fff; color: #374151; outline: none;
-            font-family: inherit; cursor: pointer;
+            border: 1.5px solid #e5e7eb; border-radius: 12px;
+            font-size: 14px; background: #fff; color: #374151;
+            outline: none; font-family: inherit; cursor: pointer;
             appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239333ea' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
             background-repeat: no-repeat;
             background-position: right 12px center;
-            background-size: 18px;
-            padding-right: 40px;
+            background-size: 18px; padding-right: 40px;
         }
         .pretty-select:focus { border-color: var(--purple); }
 
-        /* ==== LOGO ==== */
         .logo-preview {
-            width: 96px; height: 96px;
-            background: #fafafa;
-            border: 2px dashed #e5e7eb;
-            border-radius: 16px;
+            width: 96px; height: 96px; background: #fafafa;
+            border: 2px dashed #e5e7eb; border-radius: 16px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: #9ca3af;
-            overflow: hidden; text-align: center; flex-shrink: 0;
+            font-size: 10px; color: #9ca3af; overflow: hidden;
+            text-align: center; flex-shrink: 0;
         }
         .btn-purple {
             background: var(--purple); color: white;
@@ -333,10 +253,8 @@
         .btn-purple:hover { background: var(--purple-dark); }
         .btn-purple:active { transform: scale(0.97); }
 
-        /* ==== BARRA DESCARGA ==== */
         .download-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
+            position: fixed; bottom: 0; left: 0; right: 0;
             max-width: 480px; margin: 0 auto;
             padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 0px));
             display: flex; gap: 10px; z-index: 50;
@@ -346,9 +264,8 @@
         }
         .btn-download {
             flex: 1; padding: 15px; border-radius: 14px;
-            font-weight: 700; font-size: 14px;
-            border: none; cursor: pointer;
-            transition: all 0.2s; font-family: inherit;
+            font-weight: 700; font-size: 14px; border: none;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
         }
         .btn-download:active { transform: scale(0.97); }
         .btn-primary {
@@ -370,8 +287,7 @@
         .check-label {
             display: flex; align-items: center; gap: 10px;
             cursor: pointer; font-size: 14px;
-            color: #4b5563; user-select: none;
-            padding: 4px 0;
+            color: #4b5563; user-select: none; padding: 4px 0;
         }
         .check-label strong { font-weight: 600; color: #374151; }
 
@@ -384,7 +300,7 @@
         }
 
         /* =========================================================
-           VISTA PREVIA FLOTANTE (DRAGGABLE)
+           VISTA PREVIA FLOTANTE — SOLO EL HANDLE ES ARRASTRABLE
         ========================================================= */
         #floating-qr {
             position: fixed;
@@ -393,72 +309,61 @@
             background: rgba(255,255,255,0.96);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            border-radius: 20px;
-            padding: 10px;
+            border-radius: 18px;
+            padding: 6px 10px 10px;
             box-shadow:
-                0 12px 40px rgba(147, 51, 234, 0.30),
+                0 12px 40px rgba(147, 51, 234, 0.28),
                 0 0 0 1.5px rgba(147, 51, 234, 0.12);
             z-index: 55;
-            cursor: grab;
-            touch-action: none;
             user-select: none;
             -webkit-user-select: none;
-            transition: box-shadow 0.25s ease, transform 0.25s ease;
             animation: floatIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            will-change: transform, left, top;
+            will-change: left, top;
         }
-        #floating-qr:active { cursor: grabbing; }
         #floating-qr.dragging {
             box-shadow:
                 0 22px 60px rgba(147, 51, 234, 0.45),
                 0 0 0 2px rgba(147, 51, 234, 0.35);
-            transform: scale(1.06);
             transition: none;
         }
+        /* El handle SÍ captura los toques y no deja scroll mientras arrastras */
         #floating-qr .drag-handle {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 4px;
-            padding: 2px 0 8px;
+            gap: 5px;
+            padding: 6px 0 8px;
             cursor: grab;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
+        #floating-qr .drag-handle:active { cursor: grabbing; }
         #floating-qr .drag-handle span {
-            width: 5px; height: 5px; border-radius: 50%;
-            background: #c4b5fd;
-            transition: background 0.2s;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #c4b5fd; transition: background 0.2s;
+            pointer-events: none;
         }
-        #floating-qr:active .drag-handle span { background: var(--purple); }
+        #floating-qr.dragging .drag-handle span { background: var(--purple); }
 
         #floating-qr-code {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: white; border-radius: 12px; overflow: hidden;
             pointer-events: none;
         }
 
         #floating-qr .close-btn {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
+            top: -8px; right: -8px;
+            width: 26px; height: 26px;
             border-radius: 50%;
-            background: var(--purple);
-            color: white;
+            background: var(--purple); color: white;
             border: 2px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: bold;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
-            padding: 0;
-            line-height: 1;
+            padding: 0; line-height: 1;
             font-family: inherit;
         }
         #floating-qr .close-btn:active { transform: scale(0.9); }
@@ -468,17 +373,13 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Hint cuando el usuario aún no ha arrastrado */
         #floating-qr .drag-hint {
             position: absolute;
-            bottom: -28px;
-            left: 50%;
+            bottom: -26px; left: 50%;
             transform: translateX(-50%);
             background: rgba(147, 51, 234, 0.9);
-            color: white;
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 10px;
+            color: white; font-size: 10px;
+            padding: 4px 10px; border-radius: 10px;
             white-space: nowrap;
             pointer-events: none;
             opacity: 0;
@@ -498,7 +399,6 @@
 
 <div class="app-container">
 
-    <!-- ==== PILLS ==== -->
     <div class="pills-bar" id="pills-bar">
         <button type="button" class="pill active" data-tab="url">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -554,7 +454,6 @@
         </button>
     </div>
 
-    <!-- ==== TARJETA PRINCIPAL ==== -->
     <div class="main-card">
 
         <div class="qr-preview-wrap" id="main-preview-wrap">
@@ -572,13 +471,11 @@
             </button>
         </div>
 
-        <!-- PANEL CONTENIDO -->
         <div id="panel-content" class="fade-in">
             <input type="url" id="qr-data" class="big-input" value="https://www.qrcode-monkey.com" placeholder="Pon tu enlace aquí">
             <p class="input-help" id="input-help">Introduce una dirección web completa (incluye https://).</p>
         </div>
 
-        <!-- PANEL PERSONALIZAR -->
         <div id="panel-customize" class="hidden fade-in">
 
             <div class="custom-section">
@@ -726,7 +623,6 @@
         </div>
     </div>
 
-    <!-- ==== BARRA DESCARGA ==== -->
     <div class="download-bar">
         <button type="button" id="download-png" class="btn-download btn-primary">Descargar PNG</button>
         <button type="button" id="download-svg" class="btn-download btn-secondary">Descargar SVG</button>
@@ -737,7 +633,7 @@
 <!-- ==== VISTA PREVIA FLOTANTE ==== -->
 <div id="floating-qr" class="hidden">
     <button type="button" class="close-btn" id="floating-close" title="Ocultar">×</button>
-    <div class="drag-handle">
+    <div class="drag-handle" id="floating-handle" title="Arrastra para mover">
         <span></span><span></span><span></span>
     </div>
     <div id="floating-qr-code"></div>
@@ -763,7 +659,7 @@ const qrConfig = {
     cornersDotOptions: { color: "#000000", type: "square" }
 };
 
-const FLOATING_SIZE = 130;
+const FLOATING_SIZE = 120;
 
 const qrCode = new QRCodeStyling(qrConfig);
 qrCode.append(document.getElementById('qr-preview'));
@@ -944,7 +840,6 @@ stepTabs.forEach(tab => {
             panelContent.classList.add('hidden');
             panelCustomize.classList.remove('hidden');
         }
-        // Reevaluar visibilidad de la vista flotante al cambiar de pestaña
         setTimeout(checkFloatingVisibility, 50);
     });
 });
@@ -1096,10 +991,7 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         group.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        if (!qrConfig[type]) {
-            console.warn(`qrConfig["${type}"] no existe.`);
-            return;
-        }
+        if (!qrConfig[type]) return;
         qrConfig[type].type = value;
         updateQR(true);
     });
@@ -1129,7 +1021,7 @@ document.getElementById('download-png').addEventListener('click', () => qrCode.d
 document.getElementById('download-svg').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "svg" }));
 
 /* =============================================================
-   VISTA PREVIA FLOTANTE — VISIBILIDAD AL HACER SCROLL
+   VISTA PREVIA FLOTANTE — VISIBILIDAD
 ============================================================= */
 const floatingEl = document.getElementById('floating-qr');
 const floatingClose = document.getElementById('floating-close');
@@ -1138,18 +1030,15 @@ const mainPreviewWrap = document.getElementById('main-preview-wrap');
 let userDismissedFloating = false;
 
 function checkFloatingVisibility() {
-    // Si el usuario la cerró manualmente, no mostrarla
     if (userDismissedFloating) {
         floatingEl.classList.add('hidden');
         return;
     }
-    // Solo se muestra cuando la pestaña Personalizar está activa
     const inCustomize = !panelCustomize.classList.contains('hidden');
     if (!inCustomize) {
         floatingEl.classList.add('hidden');
         return;
     }
-    // Mostrar cuando el preview principal ya no se ve
     const rect = mainPreviewWrap.getBoundingClientRect();
     const previewOutOfView = rect.bottom < 60;
     floatingEl.classList.toggle('hidden', !previewOutOfView);
@@ -1167,7 +1056,6 @@ floatingClose.addEventListener('click', (e) => {
     floatingEl.classList.add('hidden');
 });
 
-// Al cambiar de pestaña, resetear el "dismissed" para permitir que vuelva a aparecer
 stepTabs.forEach(tab => {
     tab.addEventListener('click', () => {
         userDismissedFloating = false;
@@ -1175,77 +1063,97 @@ stepTabs.forEach(tab => {
 });
 
 /* =============================================================
-   ARRASTRAR VISTA PREVIA FLOTANTE (Pointer Events)
+   ARRASTRAR VISTA PREVIA — SOLO DESDE EL HANDLE
+   (Sin setPointerCapture, sin bloquear el resto de la página)
 ============================================================= */
+const dragHandle = document.getElementById('floating-handle');
+
 let isDragging = false;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
-let hasMoved = false;
-let pointerId = null;
+let dragStartPointerX = 0, dragStartPointerY = 0;
+let dragStartLeft = 0, dragStartTop = 0;
+let activePointerId = null;
 
-floatingEl.addEventListener('pointerdown', (e) => {
-    // Ignorar clics en el botón de cerrar
-    if (e.target.closest('.close-btn')) return;
-
-    isDragging = true;
-    hasMoved = false;
-    pointerId = e.pointerId;
-
+function startDrag(clientX, clientY, pointerId) {
     const rect = floatingEl.getBoundingClientRect();
-    // Fijar posición actual como left/top
+
+    // Fijar posición en left/top para que no salte al arrastrar
     floatingEl.style.left = rect.left + 'px';
     floatingEl.style.top = rect.top + 'px';
     floatingEl.style.right = 'auto';
     floatingEl.style.bottom = 'auto';
-    floatingEl.style.marginTop = '0';
 
-    dragOffsetX = e.clientX - rect.left;
-    dragOffsetY = e.clientY - rect.top;
+    dragStartPointerX = clientX;
+    dragStartPointerY = clientY;
+    dragStartLeft = rect.left;
+    dragStartTop = rect.top;
 
+    isDragging = true;
+    activePointerId = pointerId;
     floatingEl.classList.add('dragging');
-    floatingEl.setPointerCapture(e.pointerId);
-    e.preventDefault();
-});
-
-floatingEl.addEventListener('pointermove', (e) => {
-    if (!isDragging || e.pointerId !== pointerId) return;
-
-    hasMoved = true;
     floatingEl.classList.add('user-moved');
 
-    let newX = e.clientX - dragOffsetX;
-    let newY = e.clientY - dragOffsetY;
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+}
 
-    // Limitar dentro del viewport
+function onPointerMove(e) {
+    if (!isDragging) return;
+    if (activePointerId !== null && e.pointerId !== activePointerId) return;
+
+    const dx = e.clientX - dragStartPointerX;
+    const dy = e.clientY - dragStartPointerY;
+
     const rect = floatingEl.getBoundingClientRect();
-    const maxX = window.innerWidth - rect.width;
-    const maxY = window.innerHeight - rect.height;
-    newX = Math.max(8, Math.min(maxX - 8, newX));
-    newY = Math.max(8, Math.min(maxY - 8, newY));
+    const maxX = window.innerWidth - rect.width - 8;
+    const maxY = window.innerHeight - rect.height - 8;
+
+    const newX = Math.max(8, Math.min(maxX, dragStartLeft + dx));
+    const newY = Math.max(8, Math.min(maxY, dragStartTop + dy));
 
     floatingEl.style.left = newX + 'px';
     floatingEl.style.top = newY + 'px';
-});
-
-function endDrag(e) {
-    if (!isDragging) return;
-    isDragging = false;
-    floatingEl.classList.remove('dragging');
-    if (pointerId !== null && floatingEl.hasPointerCapture?.(pointerId)) {
-        floatingEl.releasePointerCapture(pointerId);
-    }
-    pointerId = null;
 }
 
-floatingEl.addEventListener('pointerup', endDrag);
-floatingEl.addEventListener('pointercancel', endDrag);
-floatingEl.addEventListener('lostpointercapture', endDrag);
+function onPointerUp(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    activePointerId = null;
+    floatingEl.classList.remove('dragging');
+
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', onPointerUp);
+}
+
+dragHandle.addEventListener('pointerdown', (e) => {
+    // Ignorar clics con botón derecho
+    if (e.button !== undefined && e.button !== 0) return;
+
+    // Doble tap → resetear a la posición por defecto
+    if (dragHandle.dataset.lastTap && Date.now() - dragHandle.dataset.lastTap < 300) {
+        resetFloatingPosition();
+        delete dragHandle.dataset.lastTap;
+        return;
+    }
+    dragHandle.dataset.lastTap = Date.now();
+
+    startDrag(e.clientX, e.clientY, e.pointerId);
+    e.preventDefault();
+});
+
+function resetFloatingPosition() {
+    floatingEl.style.left = '';
+    floatingEl.style.top = '';
+    floatingEl.style.right = '';
+    floatingEl.style.bottom = '';
+    floatingEl.classList.remove('user-moved');
+}
 
 function clampFloatingToViewport() {
-    if (!floatingEl.style.left) return; // aún no ha sido movida
+    if (!floatingEl.style.left) return;
     const rect = floatingEl.getBoundingClientRect();
-    let x = rect.left;
-    let y = rect.top;
+    let x = rect.left, y = rect.top;
     const maxX = window.innerWidth - rect.width - 8;
     const maxY = window.innerHeight - rect.height - 8;
     x = Math.max(8, Math.min(maxX, x));
@@ -1258,3 +1166,6 @@ function clampFloatingToViewport() {
    INICIALIZACIÓN
 ============================================================= */
 setActiveTab('url');
+</script>
+</body>
+</html>
