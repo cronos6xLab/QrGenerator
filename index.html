@@ -31,7 +31,7 @@
             transition: max-height 0.3s ease-out, padding 0.3s ease;
         }
         .accordion-content.open {
-            max-height: 1000px;
+            max-height: 1500px; /* Aumentado por el nuevo contenido */
             padding-top: 1rem;
             padding-bottom: 1rem;
         }
@@ -58,24 +58,19 @@
             border: 1px solid #d1d5db;
             border-radius: 0.375rem;
             overflow: hidden;
-            height: 48px;
+            height: 44px;
         }
         .color-input-group input[type="color"] {
             -webkit-appearance: none;
             border: none;
-            width: 50px;
+            width: 44px;
             height: 100%;
             cursor: pointer;
             padding: 0;
             background: transparent;
         }
-        .color-input-group input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        .color-input-group input[type="color"]::-webkit-color-swatch {
-            border: none;
-            border-right: 1px solid #e5e7eb;
-        }
+        .color-input-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-input-group input[type="color"]::-webkit-color-swatch { border: none; border-right: 1px solid #e5e7eb; }
         .color-input-group input[type="text"] {
             border: none;
             outline: none;
@@ -86,6 +81,19 @@
             font-size: 15px;
             color: #374151;
         }
+        .color-input-group .color-label {
+            padding: 0 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            white-space: nowrap;
+            border-right: 1px solid #e5e7eb;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            background-color: #f9fafb;
+        }
+
         /* Estilo para los radio buttons y checkboxes */
         .custom-radio, .custom-checkbox {
             appearance: none;
@@ -120,30 +128,67 @@
             font-weight: bold;
             line-height: 1;
         }
+
+        /* Estilo personalizado para el slider de margen */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e5e7eb;
+            height: 6px;
+            border-radius: 4px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container" id="app">
-    <!-- Cabecera con Pestañas -->
-    <div class="header-green text-white pt-4 pb-2 sticky top-0 z-50 shadow-md">
-        <div class="px-4 mb-2">
-            <h1 class="text-xl font-bold tracking-wider">Generador de Qr AMG</h1>
+    <!-- Contenedor Sticky unificado (Cabecera + Vista Previa) -->
+    <div class="sticky top-0 z-50 bg-white shadow-md">
+        <!-- Cabecera con Pestañas -->
+        <div class="header-green text-white pt-4 pb-2">
+            <div class="px-4 mb-2">
+                <h1 class="text-xl font-bold tracking-wider">Generador de Qr AMG</h1>
+            </div>
+            <div class="flex overflow-x-auto no-scrollbar gap-6 px-4 pb-2 text-sm font-semibold tracking-wide">
+                <button class="tab-btn text-white border-b-2 border-white pb-1 whitespace-nowrap" data-tab="url">URL</button>
+                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="texto">TEXTO</button>
+                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="email">EMAIL</button>
+                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="telefono">TELÉFONO</button>
+                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="sms">SMS</button>
+                <button class="tab-btn text-green-200 hover:text-white transition pb-1 whitespace-nowrap" data-tab="vcard">VCARD</button>
+            </div>
         </div>
-        <div class="flex overflow-x-auto no-scrollbar gap-6 px-4 pb-2 text-sm font-semibold tracking-wide">
-            <button class="tab-btn text-white border-b-2 border-white pb-1" data-tab="url">URL</button>
-            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="texto">TEXTO</button>
-            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="email">EMAIL</button>
-            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="telefono">TELÉFONO</button>
-            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="sms">SMS</button>
-            <button class="tab-btn text-green-200 hover:text-white transition pb-1" data-tab="vcard">VCARD</button>
-        </div>
-    </div>
 
-    <!-- Área de Previsualización -->
-    <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col items-center justify-center sticky top-[76px] z-40 shadow-sm">
-        <div id="qr-preview" class="bg-white p-2 rounded-xl shadow-sm border border-gray-100"></div>
-        <p class="text-xs text-gray-400 mt-2">Vista previa en tiempo real</p>
+        <!-- Área de Previsualización Colapsable -->
+        <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col items-center justify-center">
+            <div id="qr-preview-wrapper" class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 ease-in-out" style="max-height: 250px; opacity: 1;">
+                <div id="qr-preview"></div>
+            </div>
+            <button id="toggle-preview-btn" class="text-xs text-blue-600 hover:text-blue-800 mt-2 font-semibold flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4"></path></svg>
+                Ocultar Vista Previa
+            </button>
+        </div>
     </div>
 
     <div class="p-4 space-y-3">
@@ -164,7 +209,7 @@
             </div>
         </div>
 
-        <!-- Acordeón 2: Escoge Colores (ACTUALIZADO) -->
+        <!-- Acordeón 2: Escoge Colores -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
             <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-2">
                 <div class="flex items-center gap-3">
@@ -181,8 +226,6 @@
                     <!-- Color de Frente -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-600 mb-3">Color de Frente</label>
-                        
-                        <!-- Opciones de tipo de color -->
                         <div class="flex flex-wrap gap-4 items-center mb-3 text-sm text-gray-600">
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="color-type" value="solid" class="custom-radio" checked>
@@ -194,42 +237,55 @@
                             </label>
                         </div>
                         
-                        <!-- Checkbox Ojo Personalizado -->
-                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-4">
-                            <input type="checkbox" id="custom-eye-check" class="custom-checkbox">
-                            Color de Ojo Personalizado
-                        </label>
-
-                        <!-- Inputs de color -->
                         <div class="space-y-3">
                             <div class="color-input-group">
                                 <input type="color" id="color-front-1" value="#000000">
                                 <input type="text" id="hex-front-1" value="#000000" maxlength="7">
                             </div>
-                            
-                            <!-- Segundo color para degradado (Oculto por defecto) -->
-                            <div id="gradient-color-container" class="color-input-group hidden mt-3">
+                            <div id="gradient-color-container" class="color-input-group hidden">
                                 <input type="color" id="color-front-2" value="#3b82f6">
                                 <input type="text" id="hex-front-2" value="#3B82F6" maxlength="7">
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Color de ojo (Oculto por defecto) -->
-                            <div id="eye-color-container" class="color-input-group hidden mt-3">
-                                <input type="color" id="color-eye" value="#000000">
-                                <input type="text" id="hex-eye" value="#000000" maxlength="7">
-                            </div>
+                    <!-- Personalización de Ojos (Marcos y Centros) -->
+                    <div class="pt-4 border-t border-gray-200">
+                        <label class="block text-sm font-semibold text-gray-600 mb-3">Ojos (Esquinas)</label>
+                        
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
+                            <input type="checkbox" id="custom-eye-frame-check" class="custom-checkbox">
+                            Personalizar Marco
+                        </label>
+                        <div id="eye-frame-color-container" class="color-input-group hidden mb-4">
+                            <input type="color" id="color-eye-frame" value="#ff0000">
+                            <input type="text" id="hex-eye-frame" value="#FF0000" maxlength="7">
+                        </div>
+
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
+                            <input type="checkbox" id="custom-eye-dot-check" class="custom-checkbox">
+                            Personalizar Centro
+                        </label>
+                        <div id="eye-dot-color-container" class="color-input-group hidden">
+                            <input type="color" id="color-eye-dot" value="#00ff00">
+                            <input type="text" id="hex-eye-dot" value="#00FF00" maxlength="7">
                         </div>
                     </div>
 
                     <!-- Color de Fondo -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-2">Color de fondo</label>
-                        <div class="color-input-group">
-                            <input type="color" id="color-bg" value="#ffffff">
-                            <input type="text" id="hex-bg" value="#FFFFFF" maxlength="7">
+                    <div class="pt-4 border-t border-gray-200">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
+                            <input type="checkbox" id="transparent-bg-check" class="custom-checkbox">
+                            Fondo Transparente (Solo SVG/PNG)
+                        </label>
+                        <div id="bg-color-wrapper">
+                            <label class="block text-sm font-semibold text-gray-600 mb-2">Color de fondo</label>
+                            <div class="color-input-group" id="bg-color-group">
+                                <input type="color" id="color-bg" value="#ffffff">
+                                <input type="text" id="hex-bg" value="#FFFFFF" maxlength="7">
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -247,21 +303,21 @@
             </button>
             <div id="content-3" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
                 <div class="flex items-center gap-4">
-                    <div class="w-24 h-24 bg-white border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-xs text-gray-400" id="logo-preview">
+                    <div class="w-24 h-24 bg-white border-2 border-dashed border-gray-300 rounded flex items-center justify-center text-xs text-gray-400 overflow-hidden" id="logo-preview">
                         SIN LOGO
                     </div>
-                    <div>
+                    <div class="flex flex-col gap-2">
                         <input type="file" id="logo-upload" accept="image/*" class="hidden">
                         <button onclick="document.getElementById('logo-upload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium transition shadow-sm">
-                            Usa Imagen
+                            Usar Imagen
                         </button>
-                        <button id="remove-logo" class="mt-2 text-xs text-red-500 hover:text-red-700 block underline hidden">Eliminar Logo</button>
+                        <button id="remove-logo" class="text-xs text-red-500 hover:text-red-700 block underline hidden">Eliminar Logo</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Acordeón 4: Personalizar Diseño -->
+        <!-- Acordeón 4: Personalizar Diseño (NUEVAS OPCIONES AÑADIDAS) -->
         <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
             <button class="accordion-header w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition" data-target="content-4">
                 <div class="flex items-center gap-3">
@@ -274,6 +330,23 @@
             </button>
             <div id="content-4" class="accordion-content px-4 bg-gray-50 border-t border-gray-100">
                 
+                <!-- Nivel de Corrección -->
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Nivel de Corrección de Errores</label>
+                <select id="error-correction" class="w-full p-2 mb-4 border border-gray-300 rounded text-sm bg-white outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="L">Bajo (7%) - Recomendado sin logo</option>
+                    <option value="M">Medio (15%)</option>
+                    <option value="Q" selected>Alto (25%) - Recomendado con logo</option>
+                    <option value="H">Máximo (30%)</option>
+                </select>
+
+                <!-- Margen -->
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Margen (Zona de seguridad)</label>
+                <div class="flex items-center gap-3 mb-4">
+                    <input type="range" id="qr-margin" min="0" max="40" value="10" class="w-full">
+                    <span id="margin-value" class="text-sm font-bold w-8 text-right text-gray-700">10</span>
+                </div>
+
+                <!-- Formas -->
                 <label class="block text-sm font-semibold text-gray-600 mb-2">Forma del cuerpo</label>
                 <div class="grid grid-cols-4 gap-2 mb-4">
                     <div class="shape-btn active" data-type="dots" data-value="square"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg></div>
@@ -307,10 +380,10 @@
 </div>
 
 <script>
-    // Configuración inicial del QR
+    // Configuración inicial del QR (Reducida a 200px para que estorbe menos)
     let qrConfig = {
-        width: 250,
-        height: 250,
+        width: 200,
+        height: 200,
         type: "svg",
         data: "https://www.qrcode-monkey.com",
         image: "",
@@ -348,6 +421,26 @@
         });
     });
 
+    // --- Lógica Ocultar/Mostrar Vista Previa ---
+    const togglePreviewBtn = document.getElementById('toggle-preview-btn');
+    const previewWrapper = document.getElementById('qr-preview-wrapper');
+    let isPreviewVisible = true;
+
+    togglePreviewBtn.addEventListener('click', () => {
+        isPreviewVisible = !isPreviewVisible;
+        if (isPreviewVisible) {
+            previewWrapper.style.maxHeight = '250px';
+            previewWrapper.style.opacity = '1';
+            previewWrapper.style.marginTop = '0';
+            togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H3m0 0l4-4m-4 4l4 4"></path></svg> Ocultar Vista Previa`;
+        } else {
+            previewWrapper.style.maxHeight = '0';
+            previewWrapper.style.opacity = '0';
+            previewWrapper.style.marginTop = '-1rem';
+            togglePreviewBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h12m0 0l-4-4m4 4l-4 4"></path></svg> Mostrar Vista Previa`;
+        }
+    });
+
     // --- Lógica de Entrada de Datos ---
     document.getElementById('qr-data').addEventListener('input', (e) => {
         qrConfig.data = e.target.value || " ";
@@ -356,9 +449,14 @@
 
     // --- Lógica de Colores y Gama Cromática ---
     const colorTypeRadios = document.querySelectorAll('input[name="color-type"]');
-    const customEyeCheck = document.getElementById('custom-eye-check');
+    const customEyeFrameCheck = document.getElementById('custom-eye-frame-check');
+    const customEyeDotCheck = document.getElementById('custom-eye-dot-check');
+    const transparentBgCheck = document.getElementById('transparent-bg-check');
+    
     const gradientContainer = document.getElementById('gradient-color-container');
-    const eyeColorContainer = document.getElementById('eye-color-container');
+    const eyeFrameColorContainer = document.getElementById('eye-frame-color-container');
+    const eyeDotColorContainer = document.getElementById('eye-dot-color-container');
+    const bgColorWrapper = document.getElementById('bg-color-wrapper');
     
     // Inputs de frente
     const colorFront1 = document.getElementById('color-front-1');
@@ -367,8 +465,10 @@
     const hexFront2 = document.getElementById('hex-front-2');
     
     // Inputs de ojo
-    const colorEye = document.getElementById('color-eye');
-    const hexEye = document.getElementById('hex-eye');
+    const colorEyeFrame = document.getElementById('color-eye-frame');
+    const hexEyeFrame = document.getElementById('hex-eye-frame');
+    const colorEyeDot = document.getElementById('color-eye-dot');
+    const hexEyeDot = document.getElementById('hex-eye-dot');
 
     // Inputs de fondo
     const colorBg = document.getElementById('color-bg');
@@ -392,14 +492,22 @@
     // Función principal para aplicar los colores al QR
     function applyColors() {
         const isGradient = document.querySelector('input[name="color-type"]:checked').value === 'gradient';
-        const hasCustomEye = customEyeCheck.checked;
+        const hasCustomEyeFrame = customEyeFrameCheck.checked;
+        const hasCustomEyeDot = customEyeDotCheck.checked;
+        const isTransparent = transparentBgCheck.checked;
+        
         const color1 = colorFront1.value;
         const color2 = colorFront2.value;
         const bgColor = colorBg.value;
-        const eyeColorVal = colorEye.value;
+        const eyeFrameColorVal = colorEyeFrame.value;
+        const eyeDotColorVal = colorEyeDot.value;
 
         // Configurar Fondo
-        qrConfig.backgroundOptions.color = bgColor;
+        if (isTransparent) {
+            qrConfig.backgroundOptions.color = "rgba(0,0,0,0)";
+        } else {
+            qrConfig.backgroundOptions.color = bgColor;
+        }
 
         // Configurar Frente (Sólido o Degradado)
         if (isGradient) {
@@ -417,13 +525,17 @@
             qrConfig.dotsOptions.color = color1;
         }
 
-        // Configurar Ojos (Marcos y Centros)
-        if (hasCustomEye) {
-            qrConfig.cornersSquareOptions.color = eyeColorVal;
-            qrConfig.cornersDotOptions.color = eyeColorVal;
+        // Configurar Marco del Ojo
+        if (hasCustomEyeFrame) {
+            qrConfig.cornersSquareOptions.color = eyeFrameColorVal;
         } else {
-            // Si no es personalizado, heredan el color del frente (o el primer color del degradado)
             qrConfig.cornersSquareOptions.color = color1;
+        }
+
+        // Configurar Centro del Ojo
+        if (hasCustomEyeDot) {
+            qrConfig.cornersDotOptions.color = eyeDotColorVal;
+        } else {
             qrConfig.cornersDotOptions.color = color1;
         }
 
@@ -433,13 +545,14 @@
     // Sincronizar todos los inputs
     syncColorInputs(colorFront1, hexFront1, applyColors);
     syncColorInputs(colorFront2, hexFront2, applyColors);
-    syncColorInputs(colorEye, hexEye, applyColors);
+    syncColorInputs(colorEyeFrame, hexEyeFrame, applyColors);
+    syncColorInputs(colorEyeDot, hexEyeDot, applyColors);
     syncColorInputs(colorBg, hexBg, applyColors);
 
     // Eventos de Radio Buttons (Sólido / Degradado)
     colorTypeRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.value === 'gradient') {
+        radio.addEventListener('change', () => {
+            if (radio.value === 'gradient') {
                 gradientContainer.classList.remove('hidden');
             } else {
                 gradientContainer.classList.add('hidden');
@@ -448,13 +561,20 @@
         });
     });
 
-    // Evento Checkbox Ojo Personalizado
-    customEyeCheck.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            eyeColorContainer.classList.remove('hidden');
-        } else {
-            eyeColorContainer.classList.add('hidden');
-        }
+    // Eventos Checkbox Ojos
+    customEyeFrameCheck.addEventListener('change', (e) => {
+        e.target.checked ? eyeFrameColorContainer.classList.remove('hidden') : eyeFrameColorContainer.classList.add('hidden');
+        applyColors();
+    });
+
+    customEyeDotCheck.addEventListener('change', (e) => {
+        e.target.checked ? eyeDotColorContainer.classList.remove('hidden') : eyeDotColorContainer.classList.add('hidden');
+        applyColors();
+    });
+
+    transparentBgCheck.addEventListener('change', (e) => {
+        bgColorWrapper.style.opacity = e.target.checked ? '0.5' : '1';
+        bgColorWrapper.style.pointerEvents = e.target.checked ? 'none' : 'auto';
         applyColors();
     });
 
@@ -485,7 +605,7 @@
         updateQR();
     });
 
-    // --- Lógica de Formas ---
+    // --- Lógica de Formas y Diseño ---
     document.querySelectorAll('.shape-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const type = btn.getAttribute('data-type');
@@ -499,12 +619,28 @@
         });
     });
 
+    // Lógica Margen
+    const marginSlider = document.getElementById('qr-margin');
+    const marginValue = document.getElementById('margin-value');
+    marginSlider.addEventListener('input', (e) => {
+        qrConfig.margin = parseInt(e.target.value);
+        marginValue.textContent = e.target.value;
+        updateQR();
+    });
+
+    // Lógica Corrección de Errores
+    const errorCorrectionSelect = document.getElementById('error-correction');
+    errorCorrectionSelect.addEventListener('change', (e) => {
+        qrConfig.qrOptions.errorCorrectionLevel = e.target.value;
+        updateQR();
+    });
+
     // --- Descargas ---
     document.getElementById('download-png').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "png" }));
     document.getElementById('download-svg').addEventListener('click', () => qrCode.download({ name: "qr-amg", extension: "svg" }));
 
-    // Iniciar con el segundo acordeón abierto (Colores) para mostrar la nueva función
-    document.querySelector('.accordion-header[data-target="content-2"]').click();
+    // Iniciar con el primer acordeón abierto
+    document.querySelector('.accordion-header[data-target="content-1"]').click();
 </script>
 </body>
 </html>
