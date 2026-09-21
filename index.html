@@ -299,9 +299,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* =========================================================
-           VISTA PREVIA FLOTANTE — SOLO EL HANDLE ES ARRASTRABLE
-        ========================================================= */
+        /* VISTA PREVIA FLOTANTE */
         #floating-qr {
             position: fixed;
             bottom: 105px;
@@ -326,7 +324,6 @@
                 0 0 0 2px rgba(147, 51, 234, 0.35);
             transition: none;
         }
-        /* El handle SÍ captura los toques y no deja scroll mientras arrastras */
         #floating-qr .drag-handle {
             display: flex;
             justify-content: center;
@@ -548,9 +545,10 @@
                 </div>
             </div>
 
+            <!-- FORMA DEL CUERPO - AMPLIADO -->
             <div class="custom-section">
                 <div class="section-title">Forma del Cuerpo</div>
-                <div class="grid grid-cols-4 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                     <div class="shape-btn active" data-type="dotsOptions" data-value="square">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="4"/><rect x="10" y="4" width="4" height="4"/><rect x="16" y="4" width="4" height="4"/><rect x="4" y="10" width="4" height="4"/><rect x="10" y="10" width="4" height="4"/><rect x="16" y="10" width="4" height="4"/><rect x="4" y="16" width="4" height="4"/><rect x="10" y="16" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>
                         <span>Cuadrado</span>
@@ -563,13 +561,22 @@
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/></svg>
                         <span>Redondo</span>
                     </div>
+                    <div class="shape-btn" data-type="dotsOptions" data-value="extra-rounded">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="6" rx="3"/><rect x="14" y="4" width="6" height="6" rx="3"/><rect x="4" y="14" width="6" height="6" rx="3"/><rect x="14" y="14" width="6" height="6" rx="3"/></svg>
+                        <span>Extra Redondo</span>
+                    </div>
+                    <div class="shape-btn" data-type="dotsOptions" data-value="classy">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v2H6v4H4zM14 4h6v6h-2V6h-4zM4 14h2v4h4v2H4zM18 14h2v6h-6v-2h4z"/></svg>
+                        <span>Elegante</span>
+                    </div>
                     <div class="shape-btn" data-type="dotsOptions" data-value="classy-rounded">
                         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h8v3H7v5H4zM12 4h8v8h-3V7h-5zM4 12h3v5h5v3H4zM17 12h3v8h-8v-3h5z"/></svg>
-                        <span>Elegante</span>
+                        <span>Elegante Red.</span>
                     </div>
                 </div>
             </div>
 
+            <!-- FORMA DEL MARCO DEL OJO - AMPLIADO -->
             <div class="custom-section">
                 <div class="section-title">Forma del Marco</div>
                 <div class="grid grid-cols-3 gap-2">
@@ -577,17 +584,18 @@
                         <div class="w-6 h-6 border-4 border-current"></div>
                         <span>Cuadrado</span>
                     </div>
-                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
-                        <div class="w-6 h-6 border-4 border-current rounded-lg"></div>
-                        <span>Redondeado</span>
-                    </div>
                     <div class="shape-btn" data-type="cornersSquareOptions" data-value="dot">
                         <div class="w-6 h-6 border-4 border-current rounded-full"></div>
                         <span>Círculo</span>
                     </div>
+                    <div class="shape-btn" data-type="cornersSquareOptions" data-value="extra-rounded">
+                        <div class="w-6 h-6 border-4 border-current rounded-lg"></div>
+                        <span>Redondeado</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- FORMA DEL CENTRO DEL OJO - AMPLIADO -->
             <div class="custom-section">
                 <div class="section-title">Forma del Centro</div>
                 <div class="grid grid-cols-3 gap-2">
@@ -630,7 +638,7 @@
 
 </div>
 
-<!-- ==== VISTA PREVIA FLOTANTE ==== -->
+<!-- VISTA PREVIA FLOTANTE -->
 <div id="floating-qr" class="hidden">
     <button type="button" class="close-btn" id="floating-close" title="Ocultar">×</button>
     <div class="drag-handle" id="floating-handle" title="Arrastra para mover">
@@ -980,7 +988,7 @@ removeLogoBtn.addEventListener('click', () => {
 });
 
 /* =============================================================
-   FORMAS
+   FORMAS - ACTUALIZADO CON TODAS LAS OPCIONES
 ============================================================= */
 document.querySelectorAll('.shape-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -991,7 +999,10 @@ document.querySelectorAll('.shape-btn').forEach(btn => {
         group.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        if (!qrConfig[type]) return;
+        if (!qrConfig[type]) {
+            console.warn(`qrConfig["${type}"] no existe.`);
+            return;
+        }
         qrConfig[type].type = value;
         updateQR(true);
     });
@@ -1064,7 +1075,6 @@ stepTabs.forEach(tab => {
 
 /* =============================================================
    ARRASTRAR VISTA PREVIA — SOLO DESDE EL HANDLE
-   (Sin setPointerCapture, sin bloquear el resto de la página)
 ============================================================= */
 const dragHandle = document.getElementById('floating-handle');
 
@@ -1076,7 +1086,6 @@ let activePointerId = null;
 function startDrag(clientX, clientY, pointerId) {
     const rect = floatingEl.getBoundingClientRect();
 
-    // Fijar posición en left/top para que no salte al arrastrar
     floatingEl.style.left = rect.left + 'px';
     floatingEl.style.top = rect.top + 'px';
     floatingEl.style.right = 'auto';
@@ -1127,10 +1136,8 @@ function onPointerUp(e) {
 }
 
 dragHandle.addEventListener('pointerdown', (e) => {
-    // Ignorar clics con botón derecho
     if (e.button !== undefined && e.button !== 0) return;
 
-    // Doble tap → resetear a la posición por defecto
     if (dragHandle.dataset.lastTap && Date.now() - dragHandle.dataset.lastTap < 300) {
         resetFloatingPosition();
         delete dragHandle.dataset.lastTap;
