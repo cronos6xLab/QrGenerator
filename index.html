@@ -944,7 +944,7 @@
 
     <div class="app-header">
         <h1 class="app-title">
-            Generador QR AMG
+            Generador QR
             <small>Personaliza y descarga</small>
         </h1>
         <button type="button" class="history-btn" id="history-btn" title="Historial">
@@ -1417,7 +1417,7 @@ const tabConfigs = {
     instagram: { placeholder: 'Usuario de Instagram (sin @)', defaultValue: 'instagram', inputType: 'text', help: 'Abre el perfil de Instagram.', build: (v) => { const user = v.trim().replace(/^@/, ''); return user ? `https://instagram.com/${user}` : ' '; } },
     youtube: { placeholder: 'URL del video o canal', defaultValue: 'https://www.youtube.com', inputType: 'url', help: 'Abre el enlace de YouTube.', build: (v) => v.trim() || ' ' },
     forms: { placeholder: 'URL del Formulario de Google', defaultValue: 'https://forms.gle/', inputType: 'url', help: 'Abre el formulario de Google.', build: (v) => v.trim() || ' ' },
-    email: { placeholder: 'correo@ejemplo.com', defaultValue: 'contacto@amg.com', inputType: 'email', help: 'Al escanear se abrirá el cliente de correo.', build: (v) => { const c = v.trim(); return c ? `mailto:${c}` : ' '; } },
+    email: { placeholder: 'correo@ejemplo.com', defaultValue: 'contacto@crono.com', inputType: 'email', help: 'Al escanear se abrirá el cliente de correo.', build: (v) => { const c = v.trim(); return c ? `mailto:${c}` : ' '; } },
     telefono: { placeholder: '+52 123 456 7890', defaultValue: '+52 555 123 4567', inputType: 'tel', help: 'Al escanear se iniciará una llamada.', build: (v) => { const c = v.replace(/[^\d+]/g, ''); return c ? `tel:${c}` : ' '; } },
     sms: { placeholder: '+52 123 456 7890', defaultValue: '+52 555 123 4567', inputType: 'tel', help: 'Al escanear se abrirá la app de mensajes.', build: (v) => { const c = v.replace(/[^\d+]/g, ''); return c ? `sms:${c}` : ' '; } },
     vcard: { placeholder: 'Nombre, Teléfono, Email', defaultValue: 'Juan Pérez, +521234567890, juan@email.com', inputType: 'text', help: 'Genera una tarjeta de contacto (vCard).', build: (v) => { if (!v.trim()) return ' '; const [nombre = '', tel = '', email = ''] = v.split(',').map(s => s.trim()); return `BEGIN:VCARD\nVERSION:3.0\nN:${nombre}\nFN:${nombre}\nTEL:${tel}\nEMAIL:${email}\nEND:VCARD`; } }
@@ -1658,7 +1658,7 @@ errorCorrectionSelect.addEventListener('change', (e) => {
 /* =============================================================
    NOMBRE DE ARCHIVO Y SECUENCIA
 ============================================================= */
-const SEQUENCE_KEY = 'qrAMG_sequence';
+const SEQUENCE_KEY = 'qr_sequence';
 const filenameInput = document.getElementById('filename-input');
 const filenameHint = document.getElementById('filename-hint');
 const filenameReset = document.getElementById('filename-reset');
@@ -1709,7 +1709,7 @@ filenameReset.addEventListener('click', () => {
 /* =============================================================
    SISTEMA DE HISTORIAL
 ============================================================= */
-const HISTORY_KEY = 'qrAMG_history';
+const HISTORY_KEY = 'qr_history';
 const HISTORY_MAX_ITEMS = 40;
 const HISTORY_MAX_SIZE = 2_500_000;
 
