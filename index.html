@@ -1922,38 +1922,6 @@ function renderHistory() {
     infoBar.style.display = 'block';
 }
 
-function downloadFromHistory(item, extension) {
-    try {
-        const temp = document.createElement('div');
-        temp.style.cssText = 'position:fixed;left:-9999px;top:-9999px;pointer-events:none;';
-        document.body.appendChild(temp);
-
-        const tempQR = new QRCodeStyling({
-            ...item.config,
-            width: 400,
-            height: 400,
-            type: extension === 'svg' ? 'svg' : 'canvas'
-        });
-        tempQR.append(temp);
-
-        setTimeout(() => {
-            try {
-                tempQR.download({ name: item.name, extension });
-                showToast(`Descargado: ${item.name}.${extension}`, 'success');
-            } catch (err) {
-                console.warn('Error al descargar desde historial:', err);
-                showToast('No se pudo descargar', 'error');
-            }
-            setTimeout(() => {
-                if (temp.parentNode) temp.parentNode.removeChild(temp);
-            }, 1500);
-        }, 120);
-    } catch (e) {
-        console.error(e);
-        showToast('Error al generar la descarga', 'error');
-    }
-}
-
 function restoreFromHistory(item) {
     if (item.tab && tabConfigs[item.tab]) {
         setActiveTab(item.tab);
@@ -2083,40 +2051,135 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* =============================================================
-   DESCARGAS — SIN ASYNC/AWAIT
+   DESCARGAS — ALTA CALIDAD (PNG 1024px + SVG con viewBox)
 ============================================================= */
-function handleDownload(extension) {
+const DOWNLOAD_SIZE = 1024;
+
+async function generateDownloadBlob(extension, sourceConfig = qrConfig) {
+    const temp = document.createElement('div');
+    temp.style.cssText = 'position:fixed;left:-9999px;top:-9999px;pointer-events:none;';
+    document.body.appendChild(temp);
+
+    const tempQR = new QRCodeStyling({
+        ...sourceConfig,
+        width: DOWNLOAD_SIZE,
+        height: DOWNLOAD_SIZE,
+        type: extension === 'svg' ? 'svg' : 'canvas'
+    });
+    tempQR.append(temp);
+
+    await new Promise(r => setTimeout(r, 280));
+
+    try {
+        const rawData = await tempQR.getRawData(extension === 'svg' ? 'svg' : 'png');
+        if (!rawData) throw new Error('Sin datos generados');
+
+        let finalBlob = rawData;
+
+        if (extension === 'svg') {
+            let svgText = await rawData.text();
+
+            if (!svgText.includes('xmlns="http://www.w3.org/2000/svg"')) {
+                svgText = svgText.replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+            }
+            if (!/<svg[^>]*\swidth="/.test(svgText)) {
+                svgText = svgText.replace(/<svg/, `<svg width="${DOWNLOAD_SIZE}"`);
+            }
+            if (!/<svg[^>]*\sheight="/.test(svgText)) {
+                svgText = svgText.replace(/<svg/, `<svg height="${DOWNLOAD_SIZE}"`);
+            }
+            if (!svgText.includes('viewBox=')) {
+                svgText = svgText.replace(
+                    /<svg/,
+                    `<svg viewBox="0 0 ${DOWNLOAD_SIZE} ${DOWNLOAD_SIZE}"`
+                );
+            }
+
+            finalBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+        }
+
+        return {
+            blob: finalBlob,
+            cleanup: () => { if (temp.parentNode) temp.parentNode.removeChild(temp); }
+        };
+    } catch (e) {
+        if (temp.parentNode) temp.parentNode.removeChild(temp);
+        throw e;
+    }
+}
+
+function triggerBlobDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 1000);
+}
+
+async function handleDownload(extension) {
     const name = getFinalFilename();
 
     try {
-        qrCode.download({ name, extension });
-    } catch (err) {
-        console.error('Error en download:', err);
-        showToast('No se pudo descargar', 'error');
-        return;
-    }
+        showToast(`Generando ${extension.toUpperCase()} (${DOWNLOAD_SIZE}px)...`, 'info');
 
-    setTimeout(() => {
+        const { blob, cleanup } = await generateDownloadBlob(extension);
+
+        triggerBlobDownload(blob, `${name}.${extension}`);
+
+        await new Promise(r => setTimeout(r, 300));
+        cleanup();
+
         saveToHistory(name);
         if (!filenameInput.value.trim()) {
             incrementSequence();
             updateFilenameHint();
         }
-    }, 150);
+
+        showToast(`${extension.toUpperCase()} descargado en ${DOWNLOAD_SIZE}×${DOWNLOAD_SIZE}`, 'success');
+
+    } catch (err) {
+        console.error('Error en download:', err);
+        showToast('No se pudo descargar', 'error');
+    }
 }
 
 document.getElementById('download-png').addEventListener('click', () => handleDownload('png'));
 document.getElementById('download-svg').addEventListener('click', () => handleDownload('svg'));
 
+async function downloadFromHistory(item, extension) {
+    try {
+        showToast(`Generando ${extension.toUpperCase()}...`, 'info');
+
+        const { blob, cleanup } = await generateDownloadBlob(extension, item.config);
+
+        triggerBlobDownload(blob, `${item.name}.${extension}`);
+
+        await new Promise(r => setTimeout(r, 300));
+        cleanup();
+
+        showToast(`Descargado: ${item.name}.${extension}`, 'success');
+
+    } catch (err) {
+        console.error('Error al descargar desde historial:', err);
+        showToast('No se pudo descargar', 'error');
+    }
+}
+
 /* =============================================================
    GUARDAR EN GALERÍA (Web Share API)
-   ============================================================= */
+============================================================= */
 async function blobToPngFile(blob, filename) {
     return new File([blob], filename, { type: 'image/png' });
 }
 
 async function shareToGallery(qrInstance, name) {
-    // 1. Generar PNG como Blob
     let blob;
     try {
         blob = await qrInstance.getRawData('png');
@@ -2132,7 +2195,6 @@ async function shareToGallery(qrInstance, name) {
     const filename = sanitizeFilename(name) + '.png';
     const file = await blobToPngFile(blob, filename);
 
-    // 2. Verificar soporte de Web Share API con archivos
     const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
 
     if (canShareFiles) {
@@ -2145,16 +2207,12 @@ async function shareToGallery(qrInstance, name) {
             return true;
         } catch (err) {
             if (err.name === 'AbortError') {
-                // El usuario canceló, no mostrar error
                 return false;
             }
             console.warn('Error en navigator.share:', err);
-            // Continuar al fallback
         }
     }
 
-    // 3. Fallback: si no soporta share, intentar guardar el blob
-    //    En algunos navegadores (Chrome Android) sí funciona con download
     try {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -2177,20 +2235,18 @@ async function handleSaveToGallery() {
     const name = getFinalFilename();
     showToast('Preparando imagen...', 'info');
 
-    // Necesitamos una instancia con type=canvas para obtener PNG
     const temp = document.createElement('div');
     temp.style.cssText = 'position:fixed;left:-9999px;top:-9999px;pointer-events:none;';
     document.body.appendChild(temp);
 
     const tempQR = new QRCodeStyling({
         ...qrConfig,
-        width: 600,
-        height: 600,
+        width: 1024,
+        height: 1024,
         type: 'canvas'
     });
     tempQR.append(temp);
 
-    // Esperar a que se renderice
     setTimeout(async () => {
         const ok = await shareToGallery(tempQR, name);
         setTimeout(() => {
@@ -2216,8 +2272,8 @@ async function saveItemToGallery(item) {
 
     const tempQR = new QRCodeStyling({
         ...item.config,
-        width: 600,
-        height: 600,
+        width: 1024,
+        height: 1024,
         type: 'canvas'
     });
     tempQR.append(temp);
